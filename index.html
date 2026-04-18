@@ -704,128 +704,262 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .wm-next:hover { opacity:0.88; }
 
-/* ── ONBOARDING WIZARD MODAL ── */
+/* ── LAWYER CONNECT ── */
+.lawyer-card {
+  background:#FFFFFF; border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:18px;
+  display:flex; flex-direction:column; gap:12px;
+}
+.lawyer-card:hover { border-color:var(--red); }
+.lc-top { display:flex; gap:12px; align-items:flex-start; }
+.lc-avatar {
+  width:46px; height:46px; border-radius:50%; flex-shrink:0;
+  background:var(--red-dim); border:2px solid var(--red);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:var(--red);
+}
+.lc-name { font-size:15px; font-weight:700; color:var(--text); }
+.lc-title { font-size:12px; color:var(--text-sub); margin-top:2px; }
+.lc-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.lc-tag {
+  padding:2px 8px; border-radius:5px; font-size:11px; font-weight:700;
+  background:var(--red-dim); color:var(--red); font-family:var(--font-mono);
+}
+.lc-bio { font-size:13.5px; color:var(--text-sub); line-height:1.6; }
+.lc-meta { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--text-muted); }
+.lc-actions { display:flex; gap:8px; }
+.lc-btn-primary {
+  flex:1; padding:9px; background:var(--red); color:#fff;
+  border:none; border-radius:var(--r); font-family:var(--font);
+  font-size:13px; font-weight:700; cursor:pointer;
+}
+.lc-btn-primary:hover { opacity:0.88; }
+.lc-btn-sec {
+  padding:9px 14px; background:transparent; color:var(--text-sub);
+  border:1px solid var(--border-em); border-radius:var(--r);
+  font-family:var(--font); font-size:13px; cursor:pointer;
+}
+.lc-btn-sec:hover { background:var(--bg-hover); }
+
+/* ── LAWYER MODAL ── */
+#lawyer-modal {
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.45); align-items:center; justify-content:center;
+  padding:20px;
+}
+#lawyer-modal.open { display:flex; }
+#lawyer-modal-box {
+  background:#fff; border-radius:20px; padding:32px;
+  width:460px; max-width:95vw;
+  box-shadow:0 8px 40px rgba(0,0,0,0.18);
+}
+#lawyer-modal-box h3 { font-size:18px; font-weight:700; margin-bottom:4px; }
+#lawyer-modal-box p { font-size:13px; color:var(--text-sub); margin-bottom:20px; }
+.lm-field { margin-bottom:14px; }
+.lm-field label { display:block; font-size:12px; color:var(--text-sub); font-weight:600; margin-bottom:5px; letter-spacing:0.03em; }
+.lm-field input, .lm-field textarea, .lm-field select {
+  width:100%; padding:10px 12px; background:var(--bg-surface);
+  border:1px solid var(--border-em); border-radius:var(--r);
+  color:var(--text); font-family:var(--font); font-size:14px;
+}
+.lm-field textarea { resize:vertical; min-height:80px; }
+.lm-field input:focus, .lm-field textarea:focus, .lm-field select:focus { outline:none; border-color:var(--red); }
+.lm-actions { display:flex; gap:8px; margin-top:6px; }
+
+/* ── PRICING ── */
+.price-card {
+  background:#fff; border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:22px;
+  display:flex; flex-direction:column; gap:14px;
+  position:relative;
+}
+.price-card-featured { border-color:var(--red); box-shadow:0 0 0 3px var(--red-dim); }
+.pc-badge {
+  position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+  background:var(--red); color:#fff; font-size:11px; font-weight:700;
+  padding:3px 12px; border-radius:20px; white-space:nowrap;
+}
+.pc-tier { font-size:13px; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.08em; }
+.pc-price { font-size:28px; font-weight:700; color:var(--text); font-family:var(--font-d); }
+.pc-price span { font-size:14px; font-weight:400; color:var(--text-muted); }
+.pc-desc { font-size:13px; color:var(--text-sub); }
+.pc-features { list-style:none; display:flex; flex-direction:column; gap:7px; flex:1; }
+.pc-features li { font-size:13px; color:var(--text); }
+.pc-btn {
+  padding:11px; border-radius:var(--r); font-family:var(--font);
+  font-size:14px; font-weight:700; cursor:pointer;
+  background:var(--bg-surface); color:var(--text-sub);
+  border:1px solid var(--border-em); text-align:center;
+}
+.pc-btn-active { background:var(--red-dim); color:var(--red); border-color:rgba(204,31,31,0.3); }
+.pc-btn-featured { background:var(--red); color:#fff; border-color:var(--red); }
+.pc-btn:hover { opacity:0.85; }
+.report-card {
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:14px; display:flex; flex-direction:column; gap:8px;
+}
+.rc-agency { display:inline-block; padding:2px 8px; border-radius:5px; font-size:11px; font-weight:700; font-family:var(--font-mono); }
+.rc-title { font-size:13px; color:var(--text); font-weight:600; flex:1; }
+.rc-price { font-size:16px; font-weight:700; color:var(--red); }
+.rc-btn {
+  padding:7px; border-radius:var(--r); font-size:13px; font-weight:600;
+  background:var(--red-dim); color:var(--red); border:1px solid rgba(204,31,31,0.2);
+  cursor:pointer; font-family:var(--font);
+}
+.rc-btn:hover { background:rgba(204,31,31,0.15); }
+
+/* ── DEADLINES ── */
+.deadline-card {
+  background:#fff; border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:16px 20px;
+  display:flex; align-items:center; gap:16px;
+}
+.deadline-card.overdue { border-color:var(--red); background:var(--red-dim); }
+.deadline-card.soon { border-color:var(--gold); background:var(--gold-dim); }
+.dl-countdown {
+  min-width:64px; text-align:center; flex-shrink:0;
+}
+.dl-days { font-size:26px; font-weight:700; color:var(--red); font-family:var(--font-d); line-height:1; }
+.dl-days.ok { color:var(--text-sub); }
+.dl-days.warn { color:var(--gold); }
+.dl-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+.dl-divider { width:1px; height:48px; background:var(--border); flex-shrink:0; }
+.dl-info { flex:1; }
+.dl-title { font-size:14px; font-weight:600; color:var(--text); }
+.dl-detail { font-size:12.5px; color:var(--text-sub); margin-top:3px; }
+.dl-date { font-size:12px; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono); }
+
+/* ── PRINT / PDF EXPORT ── */
+.export-btn {
+  padding:8px 16px; background:var(--bg-surface); color:var(--text-sub);
+  border:1px solid var(--border-em); border-radius:var(--r);
+  font-family:var(--font); font-size:13px; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:6px;
+}
+.export-btn:hover { background:var(--bg-hover); }
+@media print {
+  #sidebar, #mobile-nav, #auth-overlay, #welcome-overlay,
+  #lawyer-modal, #pills, #chat-input-area, .view-header .export-btn,
+  .cl-save-row, .ask-ai-btn, .alert-ask, .lc-actions, .rc-btn,
+  .pc-btn, nav, #sidebar-backdrop { display:none !important; }
+  #app { display:block !important; }
+  #main { display:block !important; overflow:visible !important; }
+  .view { display:none !important; }
+  .view.print-active { display:block !important; overflow:visible !important; }
+  body { overflow:visible !important; }
+  .cl-section, .reg-card, .deadline-card { break-inside:avoid; }
+}
+
+/* ── PROFILE PILL (sidebar) ── */
+#profile-pill {
+  display: none; margin: 8px 8px 0;
+  padding: 10px 12px; border-radius: 10px;
+  background: rgba(21,128,61,0.10); border: 1.5px solid rgba(21,128,61,0.28);
+  cursor: pointer; gap: 9px; align-items: center;
+}
+#profile-pill:hover { background: rgba(21,128,61,0.16); }
+#profile-pill.visible { display: flex; }
+.pp-dot { width: 10px; height: 10px; border-radius: 50%; background: #15803D; flex-shrink: 0; }
+.pp-info { flex: 1; overflow: hidden; }
+.pp-name { font-size: 13px; font-weight: 700; color: #15803D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pp-industry { font-size: 11px; color: #166534; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pp-edit { font-size: 11px; color: #15803D; opacity: 0.7; flex-shrink: 0; }
+
+/* ── ONBOARDING WIZARD ── */
 #onboard-overlay {
-  display:none; position:fixed; inset:0; z-index:150;
-  background:rgba(0,0,0,0.5); align-items:center; justify-content:center; padding:20px;
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 20px;
 }
-#onboard-overlay.open { display:flex; }
+#onboard-overlay.open { display: flex; }
 #onboard-box {
-  background:#fff; border-radius:20px; width:500px; max-width:95vw;
-  box-shadow:0 8px 48px rgba(0,0,0,0.2); overflow:hidden;
+  background: #FFFFFF; border-radius: 24px;
+  width: 480px; max-width: 96vw;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+  overflow: hidden;
+  animation: wm-in 0.35s cubic-bezier(0.34,1.56,0.64,1);
 }
-.ob-header {
-  background:var(--red); padding:24px 28px 20px;
-  color:#fff;
+.ob-top {
+  background: #15803D; padding: 28px 32px 24px; position: relative; overflow: hidden;
 }
-.ob-header h2 { font-family:var(--font-d); font-size:22px; font-weight:700; margin-bottom:4px; }
-.ob-header p { font-size:13px; opacity:0.85; }
-.ob-steps {
-  display:flex; gap:6px; margin-top:14px;
-}
-.ob-step {
-  height:3px; flex:1; border-radius:2px; background:rgba(255,255,255,0.3);
-  transition:background 0.3s;
-}
-.ob-step.done { background:#fff; }
-.ob-body { padding:24px 28px; display:flex; flex-direction:column; gap:14px; }
-.ob-q { font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; }
-.ob-hint { font-size:13px; color:var(--text-sub); margin-bottom:10px; }
-.ob-opts { display:flex; flex-wrap:wrap; gap:8px; }
-.ob-opt {
-  padding:9px 16px; border-radius:20px; border:1.5px solid var(--border-em);
-  font-size:13px; font-weight:500; cursor:pointer; color:var(--text-sub);
-  transition:all 0.15s;
-}
-.ob-opt:hover { border-color:var(--red); color:var(--red); }
-.ob-opt.selected { border-color:var(--red); background:var(--red); color:#fff; font-weight:600; }
+.ob-top::before { content:''; position:absolute; right:-40px; top:-40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.07); }
+.ob-logo { font-family:var(--font-d); font-size:22px; color:#fff; font-weight:700; position:relative; z-index:1; }
+.ob-tagline { font-size:12px; color:rgba(255,255,255,0.75); margin-top:3px; position:relative; z-index:1; letter-spacing:0.04em; }
+.ob-progress-bar { display:flex; gap:5px; margin-top:14px; position:relative; z-index:1; }
+.ob-progress-seg { flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,0.25); transition:background 0.3s; }
+.ob-progress-seg.done { background:#fff; }
+.ob-body { padding: 28px 32px 24px; }
+.ob-step { display: none; }
+.ob-step.active { display: block; animation: sl-in 0.25s ease; }
+.ob-step-label { font-size:11px; font-weight:700; letter-spacing:0.1em; color:#15803D; text-transform:uppercase; margin-bottom:8px; }
+.ob-step-title { font-family:var(--font-d); font-size:20px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.ob-step-sub { font-size:13.5px; color:var(--text-sub); margin-bottom:18px; line-height:1.6; }
 .ob-input {
-  width:100%; padding:11px 14px; background:var(--bg-surface);
+  width:100%; padding:13px 14px; background:var(--bg-surface);
   border:1.5px solid var(--border-em); border-radius:var(--r);
   color:var(--text); font-family:var(--font); font-size:15px;
 }
-.ob-input:focus { outline:none; border-color:var(--red); }
-.ob-footer { display:flex; align-items:center; justify-content:space-between; padding:0 28px 24px; }
-.ob-back { font-size:14px; color:var(--text-muted); cursor:pointer; }
-.ob-back:hover { color:var(--text); }
-.ob-next {
-  padding:11px 28px; background:var(--red); color:#fff;
-  border:none; border-radius:var(--r); font-family:var(--font);
-  font-size:14px; font-weight:700; cursor:pointer;
-}
+.ob-input:focus { outline:none; border-color:#15803D; }
+.ob-footer { display:flex; align-items:center; justify-content:space-between; padding:0 32px 26px; }
+.ob-btns { display:flex; gap:8px; }
+.ob-skip { padding:10px 18px; border-radius:var(--r); background:transparent; color:var(--text-muted); border:1px solid var(--border-em); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; }
+.ob-skip:hover { background:var(--bg-hover); }
+.ob-next { padding:10px 24px; border-radius:var(--r); background:#15803D; color:#fff; border:none; font-family:var(--font); font-size:14px; font-weight:700; cursor:pointer; }
 .ob-next:hover { opacity:0.88; }
-.ob-next:disabled { opacity:0.4; cursor:default; }
+.ob-step-count { font-size:12px; color:var(--text-muted); }
 
-/* ── PROFILE PILL in sidebar ── */
-.profile-pill {
-  display:flex; align-items:center; gap:8px; padding:8px 10px;
-  background:var(--red-dim); border-radius:8px; margin:0 8px 8px;
-  cursor:pointer; border:1px solid rgba(204,31,31,0.15);
+/* ── SAVED REPORTS VIEW ── */
+#view-reports { flex-direction: column; }
+.reports-grid { display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; flex: 1; overflow-y: auto; }
+.report-saved-card {
+  background: #FFFFFF; border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  transition: border-color 0.15s;
 }
-.profile-pill:hover { background:rgba(204,31,31,0.14); }
-.profile-biz { font-size:12px; font-weight:700; color:var(--red); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.profile-ind { font-size:10px; color:var(--text-sub); }
-.profile-edit { font-size:11px; color:var(--text-muted); cursor:pointer; }
-
-/* ── SAVED REPORTS ── */
-.report-row {
-  background:#fff; border:1px solid var(--border); border-radius:var(--r-lg);
-  padding:16px 18px; display:flex; align-items:center; gap:14px;
-  cursor:pointer; transition:border-color 0.15s;
-}
-.report-row:hover { border-color:var(--red); }
-.report-icon { font-size:22px; flex-shrink:0; }
-.report-info { flex:1; }
-.report-title { font-size:14px; font-weight:700; color:var(--text); }
-.report-meta { font-size:12px; color:var(--text-muted); margin-top:3px; display:flex; gap:10px; flex-wrap:wrap; }
-.report-actions { display:flex; gap:6px; flex-shrink:0; }
-.report-open-btn {
-  padding:7px 14px; background:var(--red-dim); color:var(--red);
-  border:1px solid rgba(204,31,31,0.2); border-radius:var(--r);
-  font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font);
-}
-.report-open-btn:hover { background:rgba(204,31,31,0.15); }
-.report-del-btn {
-  padding:7px 10px; background:transparent; color:var(--text-muted);
-  border:1px solid var(--border-em); border-radius:var(--r);
-  font-size:12px; cursor:pointer; font-family:var(--font);
-}
-.report-del-btn:hover { color:var(--red); border-color:var(--red); }
-.reports-empty {
-  text-align:center; padding:48px 24px; color:var(--text-muted); font-size:14px;
-}
-.reports-empty .empty-icon { font-size:40px; margin-bottom:12px; }
-.reports-empty strong { color:var(--text); display:block; margin-bottom:6px; }
+.report-saved-card:hover { border-color: var(--red); }
+.rsc-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--red-dim); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.rsc-info { flex: 1; min-width: 0; }
+.rsc-name { font-size: 15px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rsc-meta { font-size: 12px; color: var(--text-sub); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 8px; }
+.rsc-tag { font-family: var(--font-mono); font-size: 11px; padding: 2px 7px; background: var(--bg-surface); border: 1px solid var(--border-em); border-radius: 5px; color: var(--text-sub); }
+.rsc-date { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-mono); }
+.rsc-open { padding: 8px 16px; border-radius: var(--r); background: var(--red-dim); color: var(--red); border: 1px solid rgba(204,31,31,0.25); font-family: var(--font); font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+.rsc-open:hover { background: rgba(204,31,31,0.15); }
+.rsc-delete { padding: 7px 10px; border-radius: var(--r); background: transparent; color: var(--text-muted); border: 1px solid var(--border-em); font-size: 14px; cursor: pointer; flex-shrink: 0; }
+.rsc-delete:hover { color: var(--red); border-color: var(--red); }
+.reports-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.reports-empty .re-icon { font-size: 40px; margin-bottom: 12px; }
+.reports-empty .re-title { font-size: 16px; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; }
+.reports-empty .re-sub { font-size: 13px; line-height: 1.6; }
 
 /* ── TEMPLATES STORE ── */
+#view-templates { flex-direction: column; }
+.templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; padding: 20px 24px; overflow-y: auto; align-content: start; }
 .tmpl-card {
-  background:#fff; border:1px solid var(--border); border-radius:var(--r-lg);
-  padding:18px; display:flex; flex-direction:column; gap:10px;
+  background: #FFFFFF; border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color 0.15s;
 }
-.tmpl-card:hover { border-color:var(--red); }
-.tmpl-tag {
-  display:inline-block; padding:2px 8px; border-radius:5px;
-  font-size:11px; font-weight:700; font-family:var(--font-mono);
-  width:fit-content;
-}
-.tmpl-title { font-size:15px; font-weight:700; color:var(--text); }
-.tmpl-desc { font-size:13px; color:var(--text-sub); line-height:1.6; flex:1; }
-.tmpl-meta { display:flex; align-items:center; gap:10px; }
-.tmpl-price { font-size:15px; font-weight:700; color:var(--red); }
-.tmpl-price.free { color:#16a34a; }
-.tmpl-type { font-size:11px; color:var(--text-muted); background:var(--bg-surface); padding:2px 7px; border-radius:5px; font-family:var(--font-mono); }
-.tmpl-btn {
-  padding:9px; border-radius:var(--r); font-family:var(--font);
-  font-size:13px; font-weight:700; cursor:pointer;
-  background:rgba(22,163,74,0.08); color:#16a34a;
-  border:1px solid rgba(22,163,74,0.25); text-align:center;
-}
-.tmpl-btn:hover { background:rgba(22,163,74,0.15); }
-.tmpl-btn-paid {
-  background:var(--red-dim); color:var(--red);
-  border:1px solid rgba(204,31,31,0.25);
-}
-.tmpl-btn-paid:hover { background:rgba(204,31,31,0.15); }
+.tmpl-card:hover { border-color: var(--border-em); }
+.tmpl-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.tmpl-icon { font-size: 22px; flex-shrink: 0; }
+.tmpl-badge-free { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: rgba(21,128,61,0.10); color: #15803D; border: 1px solid rgba(21,128,61,0.2); flex-shrink: 0; }
+.tmpl-badge-paid { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(180,83,9,0.2); flex-shrink: 0; }
+.tmpl-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.35; }
+.tmpl-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; flex: 1; }
+.tmpl-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+.tmpl-price { font-size: 18px; font-weight: 700; color: var(--text); font-family: var(--font-d); }
+.tmpl-price.free { color: #15803D; font-size: 16px; }
+.tmpl-btn-free { padding: 9px 18px; border-radius: var(--r); background: #15803D; color: #fff; border: none; font-family: var(--font); font-size: 13px; font-weight: 700; cursor: pointer; }
+.tmpl-btn-free:hover { opacity: 0.88; }
+.tmpl-btn-paid { padding: 9px 18px; border-radius: var(--r); background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(180,83,9,0.25); font-family: var(--font); font-size: 13px; font-weight: 700; cursor: pointer; }
+.tmpl-btn-paid:hover { background: rgba(180,83,9,0.18); }
+.templates-banner { margin: 16px 24px 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 18px; display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+.tb-icon { font-size: 22px; flex-shrink: 0; }
+.tb-text { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
+.tb-text strong { color: var(--text); }
 </style>
 </head>
 <body>
@@ -890,6 +1024,15 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       <div class="logo-tag">Nigeria Compliance AI</div>
     </div>
     <div id="nav">
+      <!-- Business Profile Pill -->
+      <div id="profile-pill" onclick="openOnboarding(true)">
+        <div class="pp-dot"></div>
+        <div class="pp-info">
+          <div class="pp-name" id="pp-biz-name">My Business</div>
+          <div class="pp-industry" id="pp-industry">—</div>
+        </div>
+        <div class="pp-edit">✎ Edit</div>
+      </div>
       <div class="nav-item active" onclick="setView('chat')" data-view="chat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Ask RenikGPT
@@ -911,8 +1054,20 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
         Reg Alerts
         <div class="nav-badge" id="alert-badge">4</div>
       </div>
+      <div class="nav-item" onclick="setView('deadlines')" data-view="deadlines">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Deadline Tracker
+      </div>
+      <div class="nav-item" onclick="setView('lawyers')" data-view="lawyers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Legal Connect
+      </div>
+      <div class="nav-item" onclick="setView('pricing')" data-view="pricing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Plans & Pricing
+      </div>
       <div class="nav-item" onclick="setView('reports')" data-view="reports">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Saved Reports
         <div class="nav-badge" id="reports-badge" style="display:none">0</div>
       </div>
@@ -1046,6 +1201,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
           <div class="view-title">Compliance Checklist Generator</div>
           <div class="view-sub">Get a personalised regulatory checklist for your business</div>
         </div>
+        <button class="export-btn" onclick="exportChecklistPDF()" title="Export as PDF">🖨 Export PDF</button>
       </div>
       <div class="checklist-body">
         <div class="cl-form-card">
@@ -1112,6 +1268,214 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       </div>
     </div>
 
+
+    <!-- DEADLINE TRACKER VIEW -->
+    <div class="view" id="view-deadlines">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Compliance Deadline Tracker</div>
+          <div class="view-sub">Key Nigerian regulatory filing dates — never miss a deadline again</div>
+        </div>
+      </div>
+      <div id="deadlines-body" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+
+    <!-- LEGAL CONNECT VIEW -->
+    <div class="view" id="view-lawyers">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Legal Connect</div>
+          <div class="view-sub">Connect with verified Nigerian compliance lawyers and consultants</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:20px">
+
+        <!-- Banner -->
+        <div style="background:var(--red-dim);border:1px solid rgba(204,31,31,0.2);border-radius:var(--r-lg);padding:18px 20px;display:flex;gap:14px;align-items:flex-start">
+          <div style="font-size:28px;flex-shrink:0">⚖️</div>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:4px">When RenikGPT says "consult a lawyer" — we mean it</div>
+            <div style="font-size:13.5px;color:var(--text-sub);line-height:1.6">AI gives you the map. A licensed professional walks the road with you. The lawyers below specialise in Nigerian corporate, tax, and regulatory law.</div>
+          </div>
+        </div>
+
+        <!-- Lawyer cards -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px" id="lawyer-cards">
+
+          <div class="lawyer-card">
+            <div class="lc-top">
+              <div class="lc-avatar">AO</div>
+              <div>
+                <div class="lc-name">Adaeze Okonkwo, Esq.</div>
+                <div class="lc-title">Corporate & Regulatory Law</div>
+                <div class="lc-tags"><span class="lc-tag">CAC</span><span class="lc-tag">FIRS</span><span class="lc-tag">CAMA 2020</span></div>
+              </div>
+            </div>
+            <div class="lc-bio">10+ years advising Nigerian SMEs on company registration, tax structuring, and CAC compliance. Former FIRS counsel.</div>
+            <div class="lc-meta"><span>📍 Lagos, Nigeria</span><span>💼 Okonkwo & Associates</span></div>
+            <div class="lc-actions">
+              <button class="lc-btn-primary" onclick="openLawyerModal('Adaeze Okonkwo')">Request Consultation</button>
+              <button class="lc-btn-sec" onclick="showToast('WhatsApp link copied','var(--green)')">WhatsApp</button>
+            </div>
+          </div>
+
+          <div class="lawyer-card">
+            <div class="lc-top">
+              <div class="lc-avatar" style="background:var(--blue-dim);color:var(--blue);border-color:var(--blue)">BU</div>
+              <div>
+                <div class="lc-name">Babatunde Usman, Esq.</div>
+                <div class="lc-title">Fintech & CBN Regulatory</div>
+                <div class="lc-tags"><span class="lc-tag" style="background:var(--blue-dim);color:var(--blue)">CBN</span><span class="lc-tag" style="background:var(--blue-dim);color:var(--blue)">SEC</span><span class="lc-tag" style="background:var(--blue-dim);color:var(--blue)">Fintech</span></div>
+              </div>
+            </div>
+            <div class="lc-bio">Specialist in CBN licensing, PSB applications, and fintech regulatory frameworks. Handled 30+ PSSP licence applications.</div>
+            <div class="lc-meta"><span>📍 Abuja, Nigeria</span><span>💼 Usman Legal Partners</span></div>
+            <div class="lc-actions">
+              <button class="lc-btn-primary" onclick="openLawyerModal('Babatunde Usman')">Request Consultation</button>
+              <button class="lc-btn-sec" onclick="showToast('WhatsApp link copied','var(--green)')">WhatsApp</button>
+            </div>
+          </div>
+
+          <div class="lawyer-card">
+            <div class="lc-top">
+              <div class="lc-avatar" style="background:rgba(109,40,217,0.08);color:#6D28D9;border-color:#6D28D9">CI</div>
+              <div>
+                <div class="lc-name">Chisom Ike, Esq.</div>
+                <div class="lc-title">Data Protection & NITDA</div>
+                <div class="lc-tags"><span class="lc-tag" style="background:rgba(109,40,217,0.08);color:#6D28D9">NDPR</span><span class="lc-tag" style="background:rgba(109,40,217,0.08);color:#6D28D9">NITDA</span><span class="lc-tag" style="background:rgba(109,40,217,0.08);color:#6D28D9">DPO</span></div>
+              </div>
+            </div>
+            <div class="lc-bio">Certified Data Protection Officer with expertise in NDPR audits, breach notification, and NITDA compliance for tech companies.</div>
+            <div class="lc-meta"><span>📍 Lagos, Nigeria</span><span>💼 Digital Compliance Hub</span></div>
+            <div class="lc-actions">
+              <button class="lc-btn-primary" onclick="openLawyerModal('Chisom Ike')">Request Consultation</button>
+              <button class="lc-btn-sec" onclick="showToast('WhatsApp link copied','var(--green)')">WhatsApp</button>
+            </div>
+          </div>
+
+          <div class="lawyer-card">
+            <div class="lc-top">
+              <div class="lc-avatar" style="background:var(--gold-dim);color:var(--gold);border-color:var(--gold)">KA</div>
+              <div>
+                <div class="lc-name">Kemi Adeyemi, Esq.</div>
+                <div class="lc-title">Food, Pharma & NAFDAC</div>
+                <div class="lc-tags"><span class="lc-tag" style="background:var(--gold-dim);color:var(--gold)">NAFDAC</span><span class="lc-tag" style="background:var(--gold-dim);color:var(--gold)">SON</span><span class="lc-tag" style="background:var(--gold-dim);color:var(--gold)">Import/Export</span></div>
+              </div>
+            </div>
+            <div class="lc-bio">20 years in NAFDAC product registration, food safety, and pharmaceutical import/export permits. Based in Lagos with national reach.</div>
+            <div class="lc-meta"><span>📍 Lagos, Nigeria</span><span>💼 Adeyemi Regulatory Counsel</span></div>
+            <div class="lc-actions">
+              <button class="lc-btn-primary" onclick="openLawyerModal('Kemi Adeyemi')">Request Consultation</button>
+              <button class="lc-btn-sec" onclick="showToast('WhatsApp link copied','var(--green)')">WhatsApp</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Are you a lawyer CTA -->
+        <div style="border:1.5px dashed var(--border-em);border-radius:var(--r-lg);padding:20px;text-align:center">
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">Are you a compliance lawyer or consultant?</div>
+          <div style="font-size:13px;color:var(--text-sub);margin-bottom:14px">Join the RenikGPT Legal Network and get warm leads from businesses that already understand their compliance gaps.</div>
+          <button class="auth-btn" style="width:auto;padding:10px 24px;font-size:14px" onclick="showToast('Partner application coming soon — email hello@renikgpt.com','var(--red)')">Apply to Join Network →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING VIEW -->
+    <div class="view" id="view-pricing">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Plans & Pricing</div>
+          <div class="view-sub">Transparent compliance intelligence — from free to enterprise</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px 24px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;max-width:1000px;margin:0 auto">
+
+          <!-- Free -->
+          <div class="price-card">
+            <div class="pc-tier">Free</div>
+            <div class="pc-price">₦0<span>/mo</span></div>
+            <div class="pc-desc">For founders just starting out</div>
+            <ul class="pc-features">
+              <li>✓ AI compliance chat (10 questions/day)</li>
+              <li>✓ Regulatory database access</li>
+              <li>✓ Basic reg alerts</li>
+              <li>✓ 1 compliance checklist</li>
+              <li style="color:var(--text-muted)">✗ PDF export</li>
+              <li style="color:var(--text-muted)">✗ Deadline tracking</li>
+              <li style="color:var(--text-muted)">✗ Saved reports</li>
+            </ul>
+            <button class="pc-btn" onclick="showToast('You are on the Free plan','var(--text-muted)')">Current Plan</button>
+          </div>
+
+          <!-- Starter -->
+          <div class="price-card">
+            <div class="pc-tier">Starter</div>
+            <div class="pc-price">₦3,000<span>/mo</span></div>
+            <div class="pc-desc">For early-stage businesses</div>
+            <ul class="pc-features">
+              <li>✓ Unlimited AI chat</li>
+              <li>✓ Advanced checklists</li>
+              <li>✓ 5 saved reports</li>
+              <li>✓ PDF checklist export</li>
+              <li>✓ Deadline tracker</li>
+              <li style="color:var(--text-muted)">✗ Legal Connect</li>
+              <li style="color:var(--text-muted)">✗ Multi-user</li>
+            </ul>
+            <button class="pc-btn pc-btn-active" onclick="showToast('Subscription coming soon — email hello@renikgpt.com','var(--red)')">Get Started →</button>
+          </div>
+
+          <!-- Pro -->
+          <div class="price-card price-card-featured">
+            <div class="pc-badge">Most Popular</div>
+            <div class="pc-tier">Pro</div>
+            <div class="pc-price">₦8,000<span>/mo</span></div>
+            <div class="pc-desc">For growing SMEs</div>
+            <ul class="pc-features">
+              <li>✓ Everything in Starter</li>
+              <li>✓ Unlimited saved reports</li>
+              <li>✓ Legal Connect access</li>
+              <li>✓ Priority reg alerts</li>
+              <li>✓ PDF upload & analysis</li>
+              <li>✓ Compliance readiness reports</li>
+              <li style="color:var(--text-muted)">✗ Multi-user</li>
+            </ul>
+            <button class="pc-btn pc-btn-featured" onclick="showToast('Subscription coming soon — email hello@renikgpt.com','var(--red)')">Get Pro →</button>
+          </div>
+
+          <!-- Business -->
+          <div class="price-card">
+            <div class="pc-tier">Business</div>
+            <div class="pc-price">₦20,000<span>/mo</span></div>
+            <div class="pc-desc">For compliance teams</div>
+            <ul class="pc-features">
+              <li>✓ Everything in Pro</li>
+              <li>✓ Multi-user (up to 10)</li>
+              <li>✓ API access</li>
+              <li>✓ Priority support</li>
+              <li>✓ Custom reg alerts</li>
+              <li>✓ White-label reports</li>
+              <li>✓ Dedicated account manager</li>
+            </ul>
+            <button class="pc-btn pc-btn-active" onclick="showToast('Enterprise enquiry — email hello@renikgpt.com','var(--red)')">Contact Sales →</button>
+          </div>
+
+        </div>
+
+        <!-- One-time reports -->
+        <div style="margin-top:24px;max-width:1000px;margin-left:auto;margin-right:auto">
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px">One-Time Compliance Reports</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+            <div class="report-card"><div class="rc-agency tag-cac">CAC</div><div class="rc-title">Company Registration & Corporate Compliance</div><div class="rc-price">₦2,000</div><button class="rc-btn" onclick="showToast('Coming soon','var(--gold)')">Buy Report</button></div>
+            <div class="report-card"><div class="rc-agency tag-firs">FIRS</div><div class="rc-title">Tax Compliance Readiness Report</div><div class="rc-price">₦2,500</div><button class="rc-btn" onclick="showToast('Coming soon','var(--gold)')">Buy Report</button></div>
+            <div class="report-card"><div class="rc-agency tag-cbn">CBN</div><div class="rc-title">Fintech & Banking Licence Readiness</div><div class="rc-price">₦5,000</div><button class="rc-btn" onclick="showToast('Coming soon','var(--gold)')">Buy Report</button></div>
+            <div class="report-card"><div class="rc-agency tag-nitda">NITDA</div><div class="rc-title">NDPR Data Protection Audit Report</div><div class="rc-price">₦3,000</div><button class="rc-btn" onclick="showToast('Coming soon','var(--gold)')">Buy Report</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ALERTS VIEW -->
     <div class="view" id="view-alerts">
       <div class="view-header">
@@ -1136,17 +1500,20 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       </div>
     </div>
 
-
     <!-- SAVED REPORTS VIEW -->
     <div class="view" id="view-reports">
-      <div class="view-header" style="justify-content:space-between">
+      <div class="view-header">
         <div>
           <div class="view-title">Saved Reports</div>
           <div class="view-sub">Your generated compliance checklists — pick up where you left off</div>
         </div>
       </div>
-      <div id="reports-body" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div class="loading-row"><div class="spinner"></div> Loading reports…</div>
+      <div class="reports-grid" id="reports-grid">
+        <div class="reports-empty">
+          <div class="re-icon">📋</div>
+          <div class="re-title">No saved reports yet</div>
+          <div class="re-sub">Generate a compliance checklist and click <strong>💾 Save Report</strong> to store it here.</div>
+        </div>
       </div>
     </div>
 
@@ -1154,94 +1521,19 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
     <div class="view" id="view-templates">
       <div class="view-header">
         <div>
-          <div class="view-title">Compliance Templates Store</div>
-          <div class="view-sub">Ready-made policy documents and compliance templates for Nigerian businesses</div>
+          <div class="view-title">Templates Store</div>
+          <div class="view-sub">Nigerian compliance document templates — free and premium</div>
         </div>
       </div>
-      <div style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:20px">
-
-        <div style="background:var(--red-dim);border:1px solid rgba(204,31,31,0.2);border-radius:var(--r-lg);padding:14px 18px;font-size:13.5px;color:var(--text-sub);line-height:1.6">
-          📋 <strong style="color:var(--red)">Pro tip:</strong> These templates are drafted to Nigerian legal standards. Customise with your company details and have a lawyer review before filing.
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-cac">CAC</div>
-            <div class="tmpl-title">Board Resolution Template</div>
-            <div class="tmpl-desc">Standard directors' resolution for common corporate decisions — opening bank accounts, appointing officers, approving accounts.</div>
-            <div class="tmpl-meta"><span class="tmpl-price free">Free</span><span class="tmpl-type">DOCX</span></div>
-            <button class="tmpl-btn" onclick="downloadTemplate('Board Resolution Template','CAC')">Download Free →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-nitda">NITDA</div>
-            <div class="tmpl-title">NDPR Privacy Policy</div>
-            <div class="tmpl-desc">Fully compliant data privacy policy template covering consent, data subject rights, breach notification, and DPO appointment per NDPR 2019.</div>
-            <div class="tmpl-meta"><span class="tmpl-price">₦1,500</span><span class="tmpl-type">DOCX</span></div>
-            <button class="tmpl-btn tmpl-btn-paid" onclick="showTemplatePaywall('NDPR Privacy Policy','₦1,500')">Get Template →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-firs">FIRS</div>
-            <div class="tmpl-title">Tax Compliance Calendar</div>
-            <div class="tmpl-desc">Pre-filled annual tax calendar with all FIRS deadlines — CIT, VAT, WHT, PAYE. Includes penalty amounts and filing checklists.</div>
-            <div class="tmpl-meta"><span class="tmpl-price">₦2,000</span><span class="tmpl-type">XLSX</span></div>
-            <button class="tmpl-btn tmpl-btn-paid" onclick="showTemplatePaywall('Tax Compliance Calendar','₦2,000')">Get Template →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-cac">CAC</div>
-            <div class="tmpl-title">Shareholders Agreement</div>
-            <div class="tmpl-desc">Standard Nigerian shareholders agreement covering share classes, pre-emption rights, drag-along/tag-along, dividend policy, and dispute resolution.</div>
-            <div class="tmpl-meta"><span class="tmpl-price">₦5,000</span><span class="tmpl-type">DOCX</span></div>
-            <button class="tmpl-btn tmpl-btn-paid" onclick="showTemplatePaywall('Shareholders Agreement','₦5,000')">Get Template →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-nitda">NITDA</div>
-            <div class="tmpl-title">NDPR Data Processing Agreement</div>
-            <div class="tmpl-desc">DPA template for businesses that share personal data with third-party processors. Required under NDPR 2019 for all controller-processor relationships.</div>
-            <div class="tmpl-meta"><span class="tmpl-price">₦2,500</span><span class="tmpl-type">DOCX</span></div>
-            <button class="tmpl-btn tmpl-btn-paid" onclick="showTemplatePaywall('NDPR Data Processing Agreement','₦2,500')">Get Template →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-firs">FIRS</div>
-            <div class="tmpl-title">Employee Contract (SME Edition)</div>
-            <div class="tmpl-desc">Nigerian-law employment contract covering PAYE, pension (PRA 2014), leave entitlements, IP assignment, and termination procedures.</div>
-            <div class="tmpl-meta"><span class="tmpl-price">₦2,000</span><span class="tmpl-type">DOCX</span></div>
-            <button class="tmpl-btn tmpl-btn-paid" onclick="showTemplatePaywall('Employee Contract (SME Edition)','₦2,000')">Get Template →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-cbn">CBN</div>
-            <div class="tmpl-title">AML/CFT Policy Template</div>
-            <div class="tmpl-desc">Anti-Money Laundering and Counter-Terrorism Financing policy for fintechs and financial services companies per CBN AML/CFT Regulations 2022.</div>
-            <div class="tmpl-meta"><span class="tmpl-price">₦8,000</span><span class="tmpl-type">DOCX</span></div>
-            <button class="tmpl-btn tmpl-btn-paid" onclick="showTemplatePaywall('AML/CFT Policy Template','₦8,000')">Get Template →</button>
-          </div>
-
-          <div class="tmpl-card">
-            <div class="tmpl-tag tag-nafdac">NAFDAC</div>
-            <div class="tmpl-title">NAFDAC Registration Checklist</div>
-            <div class="tmpl-desc">Step-by-step document checklist for registering food, cosmetic, or pharmaceutical products with NAFDAC. Includes fee schedule and timeline.</div>
-            <div class="tmpl-meta"><span class="tmpl-price free">Free</span><span class="tmpl-type">PDF</span></div>
-            <button class="tmpl-btn" onclick="downloadTemplate('NAFDAC Registration Checklist','NAFDAC')">Download Free →</button>
-          </div>
-
-        </div>
-
-        <div style="text-align:center;padding:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted)">
-          All templates are for informational purposes. Have a licensed Nigerian lawyer review before use. · <span style="color:var(--red);cursor:pointer" onclick="setView('lawyers')">Find a lawyer →</span>
-        </div>
+      <div class="templates-banner">
+        <div class="tb-icon">📄</div>
+        <div class="tb-text"><strong>Free templates</strong> download instantly. <strong>Premium templates</strong> are available via Paystack — wiring up payment soon.</div>
       </div>
+      <div class="templates-grid" id="templates-grid"></div>
     </div>
 
   </div>
 </div>
-
-<!-- MOBILE BOTTOM NAV -->
 <nav id="mobile-nav">
   <div class="mnav-item active" onclick="setView('chat')" data-view="chat">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1263,6 +1555,14 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     Alerts
     <div class="mnav-badge" id="mobile-alert-badge">4</div>
+  </div>
+  <div class="mnav-item" onclick="setView('deadlines')" data-view="deadlines">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Deadlines
+  </div>
+  <div class="mnav-item" onclick="setView('lawyers')" data-view="lawyers">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    Legal
   </div>
   <div class="mnav-item" onclick="setView('reports')" data-view="reports">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -1392,8 +1692,6 @@ let allRegs = [];
 let activeAgency = 'all';
 let searchQuery = '';
 let pdfAnalysisResult = null;
-let bizProfile = null; // { bizName, bizType, industry, stage, turnover }
-let savedReports = []; // in-memory cache of saved checklists
 
 // ──────────────────────────────────────────────
 // AUTH
@@ -1477,16 +1775,25 @@ function onAuth(user) {
   document.getElementById('user-avatar').textContent = (name[0]||'U').toUpperCase();
   loadRegs();
   loadAlerts();
-  loadBizProfile();
-  loadSavedReports();
+  loadDeadlines();
+  loadReports();
+  loadTemplates();
   if (user.id !== 'guest') {
     loadUploadHistory();
-    // Show welcome modal for first 3 sign-ins (skip if onboarding is shown)
-    const key = `renik_logins_${user.id}`;
-    const count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
-    localStorage.setItem(key, String(count));
-    const hasProfile = !!localStorage.getItem(`renik_profile_${user.id}`);
-    if (count <= 3 && hasProfile) showWelcome();
+    const profileKey = `renik_profile_${user.id}`;
+    const profile = JSON.parse(localStorage.getItem(profileKey) || 'null');
+    if (profile) {
+      renderProfilePill(profile);
+      prefillChecklistFromProfile(profile);
+      // Show welcome modal only if profile exists (returning user)
+      const key = `renik_logins_${user.id}`;
+      const count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+      localStorage.setItem(key, String(count));
+      if (count <= 3) showWelcome();
+    } else {
+      // First time — show onboarding instead of welcome modal
+      openOnboarding(false);
+    }
   }
 }
 
@@ -1536,6 +1843,8 @@ function setView(name) {
     const mb = document.getElementById('mobile-alert-badge');
     if (mb) mb.style.display='none';
   }
+  if (name==='reports') renderReports();
+  if (name==='templates') loadTemplates();
   closeSidebar();
 }
 
@@ -1940,7 +2249,7 @@ function renderChecklist(data, bizName, bizType, industry, stage, turnover) {
   });
   html += `
     <div class="cl-save-row">
-      <button class="cl-save-btn" onclick="saveChecklist(${JSON.stringify(data).replace(/"/g,'&quot;')}, '${bizName}','${bizType}','${industry}','${stage}')">💾 Save Report</button>
+      <button class="cl-save-btn" onclick="saveReport(${JSON.stringify(data).replace(/"/g,'&quot;')}, '${bizName}','${bizType}','${industry}','${stage}','${turnover}')">💾 Save Report</button>
     </div>
   `;
   output.innerHTML = html;
@@ -1956,32 +2265,278 @@ function toggleCLItem(si, ii, total) {
   if (prog) prog.textContent = `${done}/${total}`;
 }
 
-async function saveChecklist(data, bizName, bizType, industry, stage) {
-  if (!currentUser) { showToast('Sign in to save checklists', 'var(--gold)'); return; }
-
-  const report = {
-    id: `local_${Date.now()}`,
-    bizName, bizType, industry, stage,
-    items: data,
-    createdAt: new Date().toISOString()
-  };
-
-  // Always save to localStorage (works offline / without Supabase)
+function saveReport(data, bizName, bizType, industry, stage, turnover) {
+  if (!currentUser) { showToast('Sign in to save reports', 'var(--gold)'); return; }
   const key = `renik_reports_${currentUser.id}`;
-  const existing = JSON.parse(localStorage.getItem(key) || '[]');
-  existing.unshift(report);
-  localStorage.setItem(key, JSON.stringify(existing.slice(0, 20))); // keep last 20
-  savedReports = existing.slice(0, 20);
-
-  // Also save to Supabase if configured
+  const reports = JSON.parse(localStorage.getItem(key) || '[]');
+  // Count total items across all sections
+  const itemCount = (data.sections||[]).reduce((acc, sec) => acc + (sec.items||[]).length, 0);
+  const agencies = [...new Set((data.sections||[]).map(s => s.agency).filter(Boolean))];
+  const report = {
+    id: Date.now().toString(),
+    bizName: bizName || bizType || 'My Business',
+    bizType, industry, stage, turnover,
+    data,
+    agencies,
+    itemCount,
+    savedAt: new Date().toISOString()
+  };
+  reports.unshift(report);
+  localStorage.setItem(key, JSON.stringify(reports));
+  // Also try Supabase
   if (currentUser.id !== 'guest') {
-    try {
-      await sb.from('checklists').insert({ user_id:currentUser.id, business_name:bizName, business_type:bizType, industry, stage, items:data });
-    } catch(e) {}
+    sb.from('checklists').insert({ user_id:currentUser.id, business_name:bizName, business_type:bizType, industry, stage, items:data }).catch(()=>{});
   }
+  updateReportsBadge();
+  showToast('Report saved! View it in Saved Reports.', 'var(--red)');
+}
 
-  renderSavedReports();
-  showToast('Report saved! View in Saved Reports.', 'var(--red)');
+// ──────────────────────────────────────────────
+// FEATURE 1 — BUSINESS PROFILE ONBOARDING WIZARD
+// ──────────────────────────────────────────────
+let _obStep = 1;
+let _obEditMode = false;
+
+function openOnboarding(editMode) {
+  _obEditMode = editMode;
+  _obStep = 1;
+  obSetStep(1);
+  // Pre-fill if editing
+  if (editMode && currentUser) {
+    const profile = JSON.parse(localStorage.getItem(`renik_profile_${currentUser.id}`) || 'null');
+    if (profile) {
+      document.getElementById('ob-biz-name').value = profile.bizName || '';
+      document.getElementById('ob-biz-type').value = profile.bizType || '';
+      document.getElementById('ob-industry').value = profile.industry || '';
+      document.getElementById('ob-turnover').value = profile.turnover || '';
+    }
+  } else {
+    ['ob-biz-name','ob-biz-type','ob-industry','ob-turnover'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+  document.getElementById('onboard-overlay').classList.add('open');
+}
+
+function closeOnboarding() {
+  document.getElementById('onboard-overlay').classList.remove('open');
+}
+
+function obSetStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById(`ob-step-${i}`).classList.toggle('active', i === n);
+    const seg = document.getElementById(`ob-seg-${i}`);
+    seg.classList.toggle('done', i <= n);
+  }
+  document.getElementById('ob-step-count').textContent = `${n} / 4`;
+  document.getElementById('ob-next-btn').textContent = n === 4 ? 'Save Profile ✓' : 'Next →';
+  document.getElementById('ob-skip-btn').textContent = _obEditMode ? 'Cancel' : 'Skip for now';
+}
+
+function obNext() {
+  // Validate current step
+  const stepInputs = { 1:'ob-biz-name', 2:'ob-biz-type', 3:'ob-industry', 4:'ob-turnover' };
+  const val = document.getElementById(stepInputs[_obStep]).value.trim();
+  if (!val) {
+    showToast('Please fill in this field to continue', 'var(--gold)');
+    document.getElementById(stepInputs[_obStep]).focus();
+    return;
+  }
+  if (_obStep < 4) {
+    _obStep++;
+    obSetStep(_obStep);
+  } else {
+    obSaveProfile();
+  }
+}
+
+function obSaveProfile() {
+  const profile = {
+    bizName:  document.getElementById('ob-biz-name').value.trim(),
+    bizType:  document.getElementById('ob-biz-type').value,
+    industry: document.getElementById('ob-industry').value,
+    turnover: document.getElementById('ob-turnover').value,
+  };
+  if (currentUser) {
+    localStorage.setItem(`renik_profile_${currentUser.id}`, JSON.stringify(profile));
+    // Try writing to Supabase profiles table
+    if (currentUser.id !== 'guest') {
+      sb.from('profiles').upsert({ id: currentUser.id, ...profile }).catch(() => {});
+    }
+  }
+  renderProfilePill(profile);
+  prefillChecklistFromProfile(profile);
+  closeOnboarding();
+  showToast(`Profile saved — ${profile.bizName}`, '#15803D');
+}
+
+function renderProfilePill(profile) {
+  document.getElementById('pp-biz-name').textContent = profile.bizName || 'My Business';
+  document.getElementById('pp-industry').textContent = profile.industry || '';
+  document.getElementById('profile-pill').classList.add('visible');
+}
+
+function prefillChecklistFromProfile(profile) {
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) el.value = val;
+  };
+  setVal('cl-biz-name', profile.bizName);
+  setVal('cl-biz-type', profile.bizType);
+  setVal('cl-industry', profile.industry);
+  setVal('cl-turnover', profile.turnover);
+}
+
+// Close onboarding on backdrop click
+document.getElementById('onboard-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeOnboarding();
+});
+
+// ──────────────────────────────────────────────
+// FEATURE 2 — SAVED REPORTS
+// ──────────────────────────────────────────────
+function loadReports() {
+  updateReportsBadge();
+  // Render if we're already on that view
+  if (document.getElementById('view-reports').classList.contains('active')) renderReports();
+}
+
+function updateReportsBadge() {
+  if (!currentUser) return;
+  const reports = JSON.parse(localStorage.getItem(`renik_reports_${currentUser.id}`) || '[]');
+  const badge = document.getElementById('reports-badge');
+  if (reports.length > 0) {
+    badge.textContent = reports.length;
+    badge.style.display = 'block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderReports() {
+  const grid = document.getElementById('reports-grid');
+  if (!currentUser) { grid.innerHTML = '<div class="reports-empty"><div class="re-icon">🔒</div><div class="re-title">Sign in to view reports</div></div>'; return; }
+  const reports = JSON.parse(localStorage.getItem(`renik_reports_${currentUser.id}`) || '[]');
+  if (!reports.length) {
+    grid.innerHTML = `<div class="reports-empty">
+      <div class="re-icon">📋</div>
+      <div class="re-title">No saved reports yet</div>
+      <div class="re-sub">Generate a compliance checklist and click <strong>💾 Save Report</strong> to store it here.</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = reports.map(r => {
+    const date = new Date(r.savedAt).toLocaleDateString('en-NG', { day:'numeric', month:'short', year:'numeric' });
+    const agencyTags = (r.agencies||[]).map(a => `<span class="rsc-tag">${a}</span>`).join('');
+    return `
+      <div class="report-saved-card">
+        <div class="rsc-icon">📋</div>
+        <div class="rsc-info">
+          <div class="rsc-name">${r.bizName}</div>
+          <div class="rsc-meta">
+            ${r.industry ? `<span>${r.industry}</span>` : ''}
+            ${r.bizType ? `<span>${r.bizType}</span>` : ''}
+            <span>${r.itemCount || 0} items</span>
+            ${agencyTags}
+          </div>
+          <div class="rsc-date">Saved ${date}</div>
+        </div>
+        <button class="rsc-open" onclick="openReport('${r.id}')">Open →</button>
+        <button class="rsc-delete" onclick="deleteReport('${r.id}')" title="Delete report">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function openReport(id) {
+  const reports = JSON.parse(localStorage.getItem(`renik_reports_${currentUser.id}`) || '[]');
+  const r = reports.find(x => x.id === id);
+  if (!r) return;
+  setView('checklist');
+  // Pre-fill form
+  const setVal = (elId, val) => { const el = document.getElementById(elId); if (el && val) el.value = val; };
+  setVal('cl-biz-name', r.bizName);
+  setVal('cl-biz-type', r.bizType);
+  setVal('cl-industry', r.industry);
+  setVal('cl-stage', r.stage);
+  setVal('cl-turnover', r.turnover);
+  // Re-render checklist
+  renderChecklist(r.data, r.bizName, r.bizType, r.industry, r.stage, r.turnover);
+  showToast(`Opened: ${r.bizName}`, 'var(--red)');
+}
+
+function deleteReport(id) {
+  if (!currentUser) return;
+  const key = `renik_reports_${currentUser.id}`;
+  let reports = JSON.parse(localStorage.getItem(key) || '[]');
+  reports = reports.filter(r => r.id !== id);
+  localStorage.setItem(key, JSON.stringify(reports));
+  updateReportsBadge();
+  renderReports();
+  showToast('Report deleted', 'var(--text-muted)');
+}
+
+// ──────────────────────────────────────────────
+// FEATURE 3 — COMPLIANCE TEMPLATES STORE
+// ──────────────────────────────────────────────
+const TEMPLATES = [
+  { id:'t1', title:'Board Resolution', icon:'📜', desc:'Standard CAC-compliant board resolution template for company decisions, share allotments, and director appointments.', price:0, agency:'CAC', free:true },
+  { id:'t2', title:'NDPR Privacy Policy', icon:'🔒', desc:'Full NITDA/NDPR-compliant privacy policy for websites and apps collecting Nigerian user data.', price:1500, agency:'NITDA', free:false },
+  { id:'t3', title:'Tax Compliance Calendar', icon:'📅', desc:'12-month FIRS compliance calendar pre-filled with CIT, VAT, WHT, and payroll tax deadlines for your industry.', price:2000, agency:'FIRS', free:false },
+  { id:'t4', title:"Shareholders' Agreement", icon:'🤝', desc:'Comprehensive shareholders agreement covering equity split, vesting, voting rights, and exit provisions under CAMA 2020.', price:5000, agency:'CAC', free:false },
+  { id:'t5', title:'NDPR Data Processing Agreement', icon:'📋', desc:'DPA template for third-party data processors as required under NDPR 2019 Article 2.7 — include with every vendor contract.', price:2500, agency:'NITDA', free:false },
+  { id:'t6', title:'Employee Contract (Nigeria)', icon:'👤', desc:'Standard employment contract compliant with the Labour Act Cap L1, covering terms, benefits, and IP assignment.', price:2000, agency:'Labour', free:false },
+  { id:'t7', title:'AML/CFT Policy', icon:'🏦', desc:'Anti-money laundering and counter-terrorism financing policy for CBN-regulated entities, PSPs, and fintechs.', price:8000, agency:'CBN', free:false },
+  { id:'t8', title:'NAFDAC Registration Checklist', icon:'✅', desc:'Step-by-step NAFDAC product registration checklist for food, beverage, and pharmaceutical manufacturers. Updated 2024.', price:0, agency:'NAFDAC', free:true },
+];
+
+const agClass = { CBN:'tag-cbn', FIRS:'tag-firs', CAC:'tag-cac', NITDA:'tag-nitda', SEC:'tag-sec', NAFDAC:'tag-nafdac', Labour:'tag-firs' };
+
+function loadTemplates() {
+  const grid = document.getElementById('templates-grid');
+  if (!grid) return;
+  grid.innerHTML = TEMPLATES.map(t => `
+    <div class="tmpl-card">
+      <div class="tmpl-header">
+        <span class="tmpl-icon">${t.icon}</span>
+        ${t.free
+          ? `<span class="tmpl-badge-free">FREE</span>`
+          : `<span class="tmpl-badge-paid">PREMIUM</span>`}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+        <span class="agency-tag ${agClass[t.agency]||'tag-cac'}">${t.agency}</span>
+      </div>
+      <div class="tmpl-title">${t.title}</div>
+      <div class="tmpl-desc">${t.desc}</div>
+      <div class="tmpl-footer">
+        <div class="tmpl-price ${t.free?'free'}">${t.free ? 'Free' : '₦'+t.price.toLocaleString()}</div>
+        ${t.free
+          ? `<button class="tmpl-btn-free" onclick="downloadTemplate('${t.id}')">⬇ Download</button>`
+          : `<button class="tmpl-btn-paid" onclick="buyTemplate('${t.id}')">Buy →</button>`}
+      </div>
+    </div>
+  `).join('');
+}
+
+function downloadTemplate(id) {
+  const t = TEMPLATES.find(x => x.id === id);
+  if (!t) return;
+  const content = `RENIKGPT COMPLIANCE TEMPLATE\n${'='.repeat(40)}\n${t.title}\nAgency: ${t.agency}\n\nThis is a placeholder template. The full document will be available in the premium version of RenikGPT.\n\nFor the complete, legally-reviewed ${t.title} template, visit renikgpt.com or email hello@renikgpt.com.\n\n© RenikGPT — Not legal advice. Consult a qualified solicitor.`;
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `RenikGPT_${t.title.replace(/\s+/g,'_')}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`Downloading: ${t.title}`, '#15803D');
+}
+
+function buyTemplate(id) {
+  const t = TEMPLATES.find(x => x.id === id);
+  if (!t) return;
+  showToast(`To purchase ${t.title} (₦${t.price.toLocaleString()}), email hello@renikgpt.com — Paystack coming soon`, 'var(--gold)');
 }
 
 // ──────────────────────────────────────────────
@@ -2050,350 +2605,110 @@ function showToast(msg, color) {
 
 
 // ──────────────────────────────────────────────
-// BUSINESS PROFILE ONBOARDING WIZARD
+// LAWYER MODAL
 // ──────────────────────────────────────────────
-const OB_STEPS = [
-  {
-    q: 'What is your business name?',
-    hint: 'This personalises your reports and checklists.',
-    type: 'input',
-    placeholder: 'e.g. Kolade Ventures Ltd',
-    key: 'bizName'
-  },
-  {
-    q: 'What type of business are you?',
-    hint: 'This determines which CAC and CAMA rules apply to you.',
-    type: 'opts',
-    key: 'bizType',
-    opts: ['Sole Proprietorship','Partnership','Private Limited (Ltd)','Public Limited (PLC)','NGO / Non-Profit']
-  },
-  {
-    q: 'What industry are you in?',
-    hint: 'We use this to add relevant agency sections — CBN for fintech, NAFDAC for food, etc.',
-    type: 'opts',
-    key: 'industry',
-    opts: ['Fintech / Payments','E-commerce / Retail','Food & Beverages','Healthcare / Pharma','Technology / SaaS','Agriculture','Real Estate','Media / Entertainment','Education','Logistics / Transport','Other']
-  },
-  {
-    q: 'What is your annual turnover?',
-    hint: 'This determines your tax tier (CIT, VAT threshold) and pension obligations.',
-    type: 'opts',
-    key: 'turnover',
-    opts: ['Not yet trading','Under ₦5 million','₦5M – ₦25M','₦25M – ₦100M','Above ₦100M']
-  }
+function openLawyerModal(lawyerName) {
+  document.getElementById('lm-lawyer-name').textContent = lawyerName;
+  document.getElementById('lawyer-modal').classList.add('open');
+}
+function closeLawyerModal() {
+  document.getElementById('lawyer-modal').classList.remove('open');
+}
+function submitLawyerRequest() {
+  const name    = document.getElementById('lm-your-name').value.trim();
+  const email   = document.getElementById('lm-email').value.trim();
+  const issue   = document.getElementById('lm-issue').value;
+  const message = document.getElementById('lm-message').value.trim();
+  if (!name || !email || !issue) { showToast('Please fill all required fields', 'var(--gold)'); return; }
+  closeLawyerModal();
+  showToast('Request sent! The lawyer will contact you within 24 hours.', 'var(--red)');
+  // Reset
+  ['lm-your-name','lm-email','lm-message'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('lm-issue').selectedIndex = 0;
+}
+
+// ──────────────────────────────────────────────
+// DEADLINE TRACKER
+// ──────────────────────────────────────────────
+const DEADLINES = [
+  { agency:'FIRS',   title:'Annual Company Income Tax Return',         detail:'CIT return for companies with December year-end (CITA Cap C21)',         date:'2025-06-30', severity:'critical' },
+  { agency:'FIRS',   title:'Monthly VAT Return & Remittance',          detail:'VAT returns due on 21st of each month for the previous month',           date:'2025-05-21', severity:'high' },
+  { agency:'FIRS',   title:'Withholding Tax Remittance',               detail:'WHT deducted in April must be remitted by 21st May (CITA §78)',          date:'2025-05-21', severity:'high' },
+  { agency:'CAC',    title:'Annual Returns Filing',                    detail:'Due within 42 days of AGM. Penalty: ₦10,000 + ₦5,000/day (CAMA 2020 §417)', date:'2025-07-31', severity:'high' },
+  { agency:'CAC',    title:'Beneficial Ownership Register Update',     detail:'Annual update of BO register for companies with >5% shareholders',       date:'2025-06-30', severity:'medium' },
+  { agency:'PENCOM', title:'Monthly Pension Remittance',               detail:'Employer (10%) + Employee (8%) pension contributions — due 7 days after salary payment', date:'2025-05-07', severity:'critical' },
+  { agency:'NSITF',  title:'Monthly Employee Compensation Contribution',detail:'1% of total monthly payroll (ECA 2010 §33)',                            date:'2025-05-31', severity:'high' },
+  { agency:'NITDA',  title:'NDPR Annual Data Audit Submission',        detail:'Organizations handling personal data must file annual audit (NDPR 2019 Art. 4.1)', date:'2025-03-31', severity:'high' },
+  { agency:'FIRS',   title:'Transfer Pricing Documentation',           detail:'Annual TP filing for related-party transactions >₦300M (FIRS TP Regs 2018)', date:'2025-09-30', severity:'medium' },
+  { agency:'CBN',    title:'CBN Returns for Licensed Entities',        detail:'Monthly prudential returns for CBN-licensed companies',                  date:'2025-05-15', severity:'high' },
 ];
 
-let _obStep = 0;
-let _obData = {};
+function loadDeadlines() {
+  const body = document.getElementById('deadlines-body');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const agClass = { CBN:'tag-cbn', FIRS:'tag-firs', CAC:'tag-cac', NITDA:'tag-nitda', PENCOM:'tag-nitda', NSITF:'tag-firs', SEC:'tag-sec', NAFDAC:'tag-nafdac' };
 
-function openOnboarding() {
-  _obStep = 0;
-  _obData = {};
-  // Pre-fill from saved profile
-  if (bizProfile) {
-    _obData = { ...bizProfile };
-  }
-  obRender();
-  document.getElementById('onboard-overlay').classList.add('open');
-}
+  const sorted = [...DEADLINES].sort((a,b) => new Date(a.date)-new Date(b.date));
 
-function closeOnboarding() {
-  document.getElementById('onboard-overlay').classList.remove('open');
-}
-
-function obRender() {
-  const step = OB_STEPS[_obStep];
-  const body = document.getElementById('ob-body');
-
-  // Steps indicator
-  OB_STEPS.forEach((_,i) => {
-    document.getElementById(`ob-s${i+1}`).classList.toggle('done', i <= _obStep);
-  });
-  document.getElementById('ob-back-btn').style.visibility = _obStep === 0 ? 'hidden' : 'visible';
-  document.getElementById('ob-next-btn').textContent = _obStep === OB_STEPS.length - 1 ? 'Save Profile →' : 'Next →';
-
-  if (step.type === 'input') {
-    body.innerHTML = `
-      <div class="ob-q">${step.q}</div>
-      <div class="ob-hint">${step.hint}</div>
-      <input class="ob-input" id="ob-input" type="text" placeholder="${step.placeholder}" value="${_obData[step.key]||''}" oninput="obInputChange(this.value)">
-    `;
-    setTimeout(() => document.getElementById('ob-input')?.focus(), 100);
-  } else {
-    body.innerHTML = `
-      <div class="ob-q">${step.q}</div>
-      <div class="ob-hint">${step.hint}</div>
-      <div class="ob-opts">
-        ${step.opts.map(o => `
-          <div class="ob-opt${_obData[step.key]===o?' selected':''}" onclick="obSelect(this,'${o.replace(/'/g,"\'")}')">
-            ${o}
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-}
-
-function obInputChange(val) {
-  _obData[OB_STEPS[_obStep].key] = val;
-}
-
-function obSelect(el, val) {
-  document.querySelectorAll('.ob-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  _obData[OB_STEPS[_obStep].key] = val;
-}
-
-function obBack() {
-  if (_obStep > 0) { _obStep--; obRender(); }
-}
-
-async function obNext() {
-  const step = OB_STEPS[_obStep];
-  // Validate
-  if (!_obData[step.key] || _obData[step.key].trim?.() === '') {
-    showToast('Please make a selection to continue', 'var(--gold)');
-    return;
-  }
-  if (_obStep < OB_STEPS.length - 1) {
-    _obStep++;
-    obRender();
-  } else {
-    // Save profile
-    bizProfile = {
-      bizName:  _obData.bizName || '',
-      bizType:  _obData.bizType || '',
-      industry: _obData.industry || '',
-      turnover: _obData.turnover || '',
-      stage:    _obData.stage || ''
-    };
-    // Persist to localStorage
-    localStorage.setItem(`renik_profile_${currentUser?.id||'guest'}`, JSON.stringify(bizProfile));
-    // Persist to Supabase profiles table if logged in
-    if (currentUser && currentUser.id !== 'guest') {
-      try {
-        await sb.from('profiles').update({ company: bizProfile.bizName }).eq('id', currentUser.id);
-      } catch(e) {}
-    }
-    closeOnboarding();
-    renderProfilePill();
-    // Pre-fill checklist form
-    if (bizProfile.bizName) document.getElementById('cl-biz-name').value = bizProfile.bizName;
-    if (bizProfile.bizType) {
-      const sel = document.getElementById('cl-biz-type');
-      [...sel.options].forEach(o => { if (o.text.includes(bizProfile.bizType)) o.selected = true; });
-    }
-    if (bizProfile.industry) {
-      const sel = document.getElementById('cl-industry');
-      [...sel.options].forEach(o => { if (o.text === bizProfile.industry) o.selected = true; });
-    }
-    if (bizProfile.turnover) {
-      const sel = document.getElementById('cl-turnover');
-      [...sel.options].forEach(o => { if (o.text === bizProfile.turnover) o.selected = true; });
-    }
-    showToast('Business profile saved! Checklist pre-filled.', 'var(--red)');
-  }
-}
-
-function loadBizProfile() {
-  const raw = localStorage.getItem(`renik_profile_${currentUser?.id||'guest'}`);
-  if (raw) {
-    try {
-      bizProfile = JSON.parse(raw);
-      renderProfilePill();
-      // Pre-fill checklist
-      if (bizProfile.bizName) document.getElementById('cl-biz-name').value = bizProfile.bizName;
-      if (bizProfile.bizType) {
-        const sel = document.getElementById('cl-biz-type');
-        [...sel.options].forEach(o => { if (o.text.includes(bizProfile.bizType)) o.selected = true; });
-      }
-      if (bizProfile.industry) {
-        const sel = document.getElementById('cl-industry');
-        [...sel.options].forEach(o => { if (o.text === bizProfile.industry) o.selected = true; });
-      }
-      if (bizProfile.turnover) {
-        const sel = document.getElementById('cl-turnover');
-        [...sel.options].forEach(o => { if (o.text === bizProfile.turnover) o.selected = true; });
-      }
-    } catch(e) {}
-  } else {
-    // First time — show onboarding after a short delay
-    setTimeout(() => openOnboarding(), 1200);
-  }
-}
-
-function renderProfilePill() {
-  if (!bizProfile?.bizName) return;
-  const nav = document.getElementById('nav');
-  let pill = document.getElementById('profile-pill');
-  if (!pill) {
-    pill = document.createElement('div');
-    pill.id = 'profile-pill';
-    pill.className = 'profile-pill';
-    pill.onclick = openOnboarding;
-    nav.parentElement.insertBefore(pill, nav);
-  }
-  pill.innerHTML = `
-    <div style="font-size:18px">🏢</div>
-    <div style="flex:1;overflow:hidden">
-      <div class="profile-biz">${bizProfile.bizName}</div>
-      <div class="profile-ind">${bizProfile.industry||''}</div>
-    </div>
-    <div class="profile-edit" title="Edit profile">✏️</div>
-  `;
-}
-
-// ──────────────────────────────────────────────
-// SAVED REPORTS
-// ──────────────────────────────────────────────
-function loadSavedReports() {
-  const body = document.getElementById('reports-body');
-  // Load from localStorage (works without Supabase too)
-  const key = `renik_reports_${currentUser?.id||'guest'}`;
-  try { savedReports = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) { savedReports = []; }
-
-  // Also try loading from Supabase
-  if (currentUser && currentUser.id !== 'guest') {
-    sb.from('checklists').select('*').eq('user_id', currentUser.id).order('created_at', {ascending:false}).limit(20)
-      .then(({ data }) => {
-        if (data && data.length) {
-          // Merge Supabase results with local cache
-          data.forEach(d => {
-            if (!savedReports.find(r => r.id === d.id)) {
-              savedReports.push({ id: d.id, bizName: d.business_name, bizType: d.business_type, industry: d.industry, stage: d.stage, items: d.items, createdAt: d.created_at });
-            }
-          });
-        }
-        renderSavedReports();
-      }).catch(() => renderSavedReports());
-  } else {
-    renderSavedReports();
-  }
-}
-
-function renderSavedReports() {
-  const body = document.getElementById('reports-body');
-  const badge = document.getElementById('reports-badge');
-
-  if (!savedReports.length) {
-    badge.style.display = 'none';
-    body.innerHTML = `
-      <div class="reports-empty">
-        <div class="empty-icon">📋</div>
-        <strong>No saved reports yet</strong>
-        Generate a compliance checklist and click "Save Report" to see it here.
-        <br><br>
-        <button class="auth-btn" style="width:auto;padding:10px 24px;font-size:14px;margin-top:8px" onclick="setView('checklist')">Generate a Checklist →</button>
-      </div>
-    `;
-    return;
-  }
-
-  badge.style.display = 'inline-block';
-  badge.textContent = savedReports.length;
-
-  const agClass = { CBN:'tag-cbn', FIRS:'tag-firs', CAC:'tag-cac', NITDA:'tag-nitda', SEC:'tag-sec', NAFDAC:'tag-nafdac' };
   body.innerHTML = `
-    <div style="font-size:13px;color:var(--text-sub);margin-bottom:4px">${savedReports.length} saved report${savedReports.length!==1?'s':''} — click to reopen any checklist</div>
-  ` + savedReports.map((r, i) => {
-    const sections = r.items?.sections || [];
-    const totalItems = sections.reduce((acc, s) => acc + (s.items?.length||0), 0);
-    const agencies = [...new Set(sections.map(s => s.agency))].slice(0,4);
-    const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'}) : 'Recent';
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="font-size:13px;color:var(--text-sub)">Showing <strong>${sorted.length}</strong> upcoming compliance deadlines. Dates shown for current filing cycle.</div>
+      <button class="export-btn" onclick="exportDeadlinesPDF()">🖨 Print / Export PDF</button>
+    </div>
+  ` + sorted.map(dl => {
+    const due = new Date(dl.date);
+    due.setHours(0,0,0,0);
+    const diff = Math.round((due - today) / 86400000);
+    const overdue = diff < 0;
+    const soon = diff >= 0 && diff <= 14;
+    const cardClass = overdue ? 'deadline-card overdue' : soon ? 'deadline-card soon' : 'deadline-card';
+    const daysLabel = overdue ? `${Math.abs(diff)}` : `${diff}`;
+    const daysText = overdue ? 'days overdue' : diff === 0 ? 'DUE TODAY' : 'days left';
+    const daysClass = overdue ? 'dl-days' : soon ? 'dl-days warn' : 'dl-days ok';
     return `
-      <div class="report-row" onclick="reopenReport(${i})">
-        <div class="report-icon">📋</div>
-        <div class="report-info">
-          <div class="report-title">${r.bizName || r.bizType || 'Compliance Checklist'}</div>
-          <div class="report-meta">
-            <span>${r.industry||''}</span>
-            <span>${r.stage||''}</span>
-            <span>${totalItems} items across ${sections.length} agencies</span>
-            <span>${date}</span>
-          </div>
-          <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">
-            ${agencies.map(a=>`<span class="agency-tag ${agClass[a]||'tag-cac'}" style="font-size:10px">${a}</span>`).join('')}
-          </div>
+      <div class="${cardClass}">
+        <div class="dl-countdown">
+          <div class="${daysClass}">${diff === 0 ? '!' : daysLabel}</div>
+          <div class="dl-label">${daysText}</div>
         </div>
-        <div class="report-actions" onclick="event.stopPropagation()">
-          <button class="report-open-btn" onclick="reopenReport(${i})">Open →</button>
-          <button class="report-del-btn" onclick="deleteReport(${i})">✕</button>
+        <div class="dl-divider"></div>
+        <div class="dl-info">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+            <span class="agency-tag ${agClass[dl.agency]||'tag-cac'}">${dl.agency}</span>
+            <span class="cl-priority pri-${dl.severity}" style="font-size:10px">${dl.severity.toUpperCase()}</span>
+          </div>
+          <div class="dl-title">${dl.title}</div>
+          <div class="dl-detail">${dl.detail}</div>
+          <div class="dl-date">Due: ${due.toLocaleDateString('en-NG',{weekday:'short',year:'numeric',month:'short',day:'numeric'})}</div>
         </div>
+        <button class="ask-ai-btn" style="flex-shrink:0;align-self:center" onclick="quickAskDeadline('${dl.title.replace(/'/g,"\'")}','${dl.agency}')">Ask AI →</button>
       </div>
     `;
   }).join('');
 }
 
-function reopenReport(idx) {
-  const r = savedReports[idx];
-  if (!r || !r.items) return;
-  setView('checklist');
-  // Pre-fill form fields
-  if (r.bizName) document.getElementById('cl-biz-name').value = r.bizName;
-  if (r.bizType) {
-    const sel = document.getElementById('cl-biz-type');
-    [...sel.options].forEach(o => { if (o.text.includes(r.bizType)) o.selected = true; });
-  }
-  if (r.industry) {
-    const sel = document.getElementById('cl-industry');
-    [...sel.options].forEach(o => { if (o.text === r.industry) o.selected = true; });
-  }
-  if (r.stage) {
-    const sel = document.getElementById('cl-stage');
-    [...sel.options].forEach(o => { if (o.text === r.stage) o.selected = true; });
-  }
-  // Render the saved checklist immediately
-  renderChecklist(r.items, r.bizName, r.bizType, r.industry, r.stage, '');
-  showToast('Report reopened!', 'var(--red)');
+function quickAskDeadline(title, agency) {
+  setView('chat');
+  document.getElementById('chat-input').value = `What do I need to do for the "${title}" (${agency}) deadline? What are the requirements, penalties for missing it, and how do I file?`;
+  sendChat();
 }
 
-function deleteReport(idx) {
-  savedReports.splice(idx, 1);
-  const key = `renik_reports_${currentUser?.id||'guest'}`;
-  localStorage.setItem(key, JSON.stringify(savedReports));
-  renderSavedReports();
-  showToast('Report deleted', 'var(--text-muted)');
+function exportDeadlinesPDF() {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('print-active'));
+  document.getElementById('view-deadlines').classList.add('print-active');
+  window.print();
+  setTimeout(() => document.getElementById('view-deadlines').classList.remove('print-active'), 1000);
 }
 
 // ──────────────────────────────────────────────
-// TEMPLATES STORE
+// CHECKLIST PDF EXPORT — add export button after render
 // ──────────────────────────────────────────────
-function downloadTemplate(name, agency) {
-  // In production this would download an actual file.
-  // For the demo, we generate a simple text document the browser can save.
-  const content = generateTemplateContent(name, agency);
-  const blob = new Blob([content], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = name.replace(/\s+/g,'-').toLowerCase() + '.txt';
-  a.click();
-  showToast(`Downloading: ${name}`, 'var(--red)');
-}
-
-function generateTemplateContent(name, agency) {
-  const biz = bizProfile?.bizName || '[YOUR COMPANY NAME]';
-  const date = new Date().toLocaleDateString('en-NG',{day:'numeric',month:'long',year:'numeric'});
-  return `RENIKGPT COMPLIANCE TEMPLATE
-=====================================
-Template: ${name}
-Agency:   ${agency}
-Company:  ${biz}
-Date:     ${date}
-Generated by RenikGPT — renikgpt.com
-=====================================
-
-[This is a placeholder template. In production, a fully formatted
-DOCX/PDF document would be delivered here.]
-
-For the full formatted template, upgrade to a paid plan at renikgpt.com
-or contact hello@renikgpt.com
-
-⚖️ Not legal advice. Have a qualified Nigerian solicitor review before use.
-`;
-}
-
-function showTemplatePaywall(name, price) {
-  showToast(`${name} (${price}) — payment coming soon. Email hello@renikgpt.com to purchase.`, 'var(--gold)');
+function exportChecklistPDF() {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('print-active'));
+  document.getElementById('view-checklist').classList.add('print-active');
+  window.print();
+  setTimeout(() => document.getElementById('view-checklist').classList.remove('print-active'), 1000);
 }
 
 // ──────────────────────────────────────────────
@@ -2429,20 +2744,118 @@ function showTemplatePaywall(name, price) {
 <!-- ONBOARDING WIZARD -->
 <div id="onboard-overlay">
   <div id="onboard-box">
-    <div class="ob-header">
-      <h2>Set up your business profile</h2>
-      <p>RenikGPT uses this to personalise your checklists, alerts, and AI responses.</p>
-      <div class="ob-steps">
-        <div class="ob-step done" id="ob-s1"></div>
-        <div class="ob-step" id="ob-s2"></div>
-        <div class="ob-step" id="ob-s3"></div>
-        <div class="ob-step" id="ob-s4"></div>
+    <div class="ob-top">
+      <div class="ob-logo">RenikGPT</div>
+      <div class="ob-tagline">Let's set up your business profile</div>
+      <div class="ob-progress-bar">
+        <div class="ob-progress-seg" id="ob-seg-1"></div>
+        <div class="ob-progress-seg" id="ob-seg-2"></div>
+        <div class="ob-progress-seg" id="ob-seg-3"></div>
+        <div class="ob-progress-seg" id="ob-seg-4"></div>
       </div>
     </div>
-    <div class="ob-body" id="ob-body"><!-- filled by JS --></div>
+    <div class="ob-body">
+      <!-- Step 1: Business Name -->
+      <div class="ob-step active" id="ob-step-1">
+        <div class="ob-step-label">Step 1 of 4 — Business Name</div>
+        <div class="ob-step-title">What's your business called?</div>
+        <div class="ob-step-sub">This helps RenikGPT personalise your compliance checklist and reports.</div>
+        <input class="ob-input" id="ob-biz-name" type="text" placeholder="e.g. Kolade Ventures Ltd" autocomplete="organization">
+      </div>
+      <!-- Step 2: Business Type -->
+      <div class="ob-step" id="ob-step-2">
+        <div class="ob-step-label">Step 2 of 4 — Business Structure</div>
+        <div class="ob-step-title">How is your business structured?</div>
+        <div class="ob-step-sub">Your legal structure determines which CAC and CAMA requirements apply to you.</div>
+        <select class="ob-input" id="ob-biz-type">
+          <option value="">Select type…</option>
+          <option>Sole Proprietorship</option>
+          <option>Partnership</option>
+          <option>Private Limited Company (Ltd)</option>
+          <option>Public Limited Company (PLC)</option>
+          <option>NGO / Non-Profit</option>
+        </select>
+      </div>
+      <!-- Step 3: Industry -->
+      <div class="ob-step" id="ob-step-3">
+        <div class="ob-step-label">Step 3 of 4 — Industry</div>
+        <div class="ob-step-title">What industry are you in?</div>
+        <div class="ob-step-sub">Industry determines which sector-specific regulations — CBN, NAFDAC, SEC — apply.</div>
+        <select class="ob-input" id="ob-industry">
+          <option value="">Select industry…</option>
+          <option>Fintech / Payments</option>
+          <option>E-commerce / Retail</option>
+          <option>Food & Beverages</option>
+          <option>Healthcare / Pharma</option>
+          <option>Technology / SaaS</option>
+          <option>Agriculture</option>
+          <option>Real Estate</option>
+          <option>Media / Entertainment</option>
+          <option>Education</option>
+          <option>Logistics / Transport</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <!-- Step 4: Annual Turnover -->
+      <div class="ob-step" id="ob-step-4">
+        <div class="ob-step-label">Step 4 of 4 — Annual Turnover</div>
+        <div class="ob-step-title">What is your annual turnover range?</div>
+        <div class="ob-step-sub">Turnover determines your VAT threshold, tax rate, and filing obligations under FIRS.</div>
+        <select class="ob-input" id="ob-turnover">
+          <option value="">Select range…</option>
+          <option>Not yet trading</option>
+          <option>Under ₦5 million</option>
+          <option>₦5M – ₦25M</option>
+          <option>₦25M – ₦100M</option>
+          <option>Above ₦100M</option>
+        </select>
+      </div>
+    </div>
     <div class="ob-footer">
-      <span class="ob-back" id="ob-back-btn" onclick="obBack()">← Back</span>
-      <button class="ob-next" id="ob-next-btn" onclick="obNext()">Next →</button>
+      <div class="ob-step-count" id="ob-step-count">1 / 4</div>
+      <div class="ob-btns">
+        <button class="ob-skip" id="ob-skip-btn" onclick="closeOnboarding()">Skip for now</button>
+        <button class="ob-next" id="ob-next-btn" onclick="obNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAWYER CONTACT MODAL -->
+<div id="lawyer-modal">
+  <div id="lawyer-modal-box">
+    <h3>Request Consultation</h3>
+    <p>Send a brief to <strong id="lm-lawyer-name"></strong> — they will respond within 24 hours.</p>
+    <div class="lm-field">
+      <label>YOUR NAME *</label>
+      <input id="lm-your-name" type="text" placeholder="e.g. Emeka Obi">
+    </div>
+    <div class="lm-field">
+      <label>WORK EMAIL *</label>
+      <input id="lm-email" type="email" placeholder="you@company.com">
+    </div>
+    <div class="lm-field">
+      <label>COMPLIANCE ISSUE *</label>
+      <select id="lm-issue">
+        <option value="">Select issue type…</option>
+        <option>Company Registration / CAC</option>
+        <option>Tax Compliance / FIRS</option>
+        <option>CBN / Fintech Licensing</option>
+        <option>Data Protection / NDPR</option>
+        <option>NAFDAC Registration</option>
+        <option>SEC / Investment</option>
+        <option>Employment / Labour</option>
+        <option>General Corporate Law</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="lm-field">
+      <label>BRIEF DESCRIPTION (OPTIONAL)</label>
+      <textarea id="lm-message" placeholder="Describe your compliance situation briefly…"></textarea>
+    </div>
+    <div class="lm-actions">
+      <button class="auth-btn" style="flex:1" onclick="submitLawyerRequest()">Send Request →</button>
+      <button class="lc-btn-sec" style="padding:13px 18px" onclick="closeLawyerModal()">Cancel</button>
     </div>
   </div>
 </div>
