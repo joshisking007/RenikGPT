@@ -2727,9 +2727,9 @@ function fmtText(t) {
     .replace(/\n/g,'<br>');
 }
 
-// ── AI: tries /api/chat proxy first (Cloudflare Worker), then direct with key ──
+// ── AI: tries /api/chat (Cloudflare Pages), then falls back to Supabase Edge Function ──
 async function callAI(payload) {
-  // Option A: Cloudflare Pages Function at /api/chat (preferred — key stays server-side)
+  // Option A: Cloudflare Pages Function at /api/chat
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
@@ -2737,26 +2737,24 @@ async function callAI(payload) {
       body: JSON.stringify(payload)
     });
     if (res.ok) return await res.json();
-  } catch(e) { /* fall through to direct call */ }
+  } catch(e) { /* not on Cloudflare Pages — fall through */ }
 
-  // Option B: Direct call with key in-browser (works locally / before Worker is deployed)
-  if (ANTHROPIC_API_KEY && ANTHROPIC_API_KEY !== 'YOUR_ANTHROPIC_KEY_HERE') {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+  // Option B: Supabase Edge Function (always available as long as project is live)
+  if (SUPABASE_CONFIGURED) {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Authorization': `Bearer ${SUPABASE_KEY}`
       },
       body: JSON.stringify(payload)
     });
     if (res.ok) return await res.json();
-    const err = await res.json();
-    throw new Error(err.error?.message || 'Anthropic API error');
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Edge Function error ${res.status}`);
   }
 
-  throw new Error('No API key configured. Add your Anthropic key to the ANTHROPIC_API_KEY constant, or deploy the Cloudflare Worker.');
+  throw new Error('No AI proxy available. Deploy to Cloudflare Pages or ensure your Supabase Edge Function is live.');
 }
 
 async function sendChat() {
