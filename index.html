@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>RenikGPT — Nigerian Compliance AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -191,6 +191,7 @@ create policy "Users or org members access docs"
 }
 
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); overflow: hidden; }
+#app { display: flex; height: 100vh; height: 100dvh; }
 
 /* ── MOBILE NAV — removed; hamburger handles navigation ── */
 #mobile-nav { display: none !important; }
@@ -222,10 +223,13 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   #reg-grid { padding: 12px 14px; grid-template-columns: 1fr; }
   .checklist-body, .upload-body, .alerts-body { padding: 14px; }
   .form-grid { grid-template-columns: 1fr !important; }
-  #pills { padding: 8px 12px; }
-  #messages { padding: 12px; }
-  #chat-input-area { padding: 10px 12px; }
-  .view-header { padding: 14px 16px 12px; }
+  #pills { padding: 8px 10px; }
+  #messages { padding: 10px 12px; }
+  #chat-input-area { padding: 10px 10px 12px; }
+  .msg { max-width: 92%; }
+  .bubble { font-size: 14px; padding: 11px 14px; }
+  .composer-hint { display: none !important; }
+  #view-chat { height: 100%; }
 }
 
 /* ── AUTH ── */
@@ -269,9 +273,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .auth-btn:hover { opacity: 0.88; }
 .auth-btn:disabled { opacity: 0.5; cursor: default; }
 .auth-error { font-size: 12px; color: var(--red); margin-top: 10px; text-align: center; }
-
-/* ── LAYOUT ── */
-#app { display: flex; height: 100vh; }
 
 #sidebar {
   width: 220px; flex-shrink: 0;
@@ -367,8 +368,9 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #messages::-webkit-scrollbar-track { background: transparent; }
 #messages::-webkit-scrollbar-thumb { background: var(--border-em); border-radius: 2px; }
 
-.msg { display: flex; gap: 10px; max-width: 85%; }
+.msg { display: flex; gap: 10px; max-width: 82%; min-width: 0; }
 .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg.bot { align-self: flex-start; }
 
 .msg-avatar {
   width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
@@ -379,8 +381,10 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .msg.user .msg-avatar { background: var(--bg-surface); color: var(--text-sub); border: 1px solid var(--border-em); }
 
 .bubble {
-  padding: 12px 16px; border-radius: 14px;
-  font-size: 15px; line-height: 1.7;
+  padding: 13px 16px; border-radius: 14px;
+  font-size: 14.5px; line-height: 1.75;
+  word-wrap: break-word; overflow-wrap: break-word;
+  word-break: break-word; min-width: 0;
 }
 .msg.bot .bubble {
   background: var(--bg-surface); color: var(--text);
@@ -415,25 +419,114 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 @keyframes tdot { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
 
 #chat-input-area {
-  padding: 12px 16px; border-top: 1px solid var(--border);
-  display: flex; gap: 8px; align-items: center;
-  background: var(--bg-surface); flex-shrink: 0;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+  flex-shrink: 0;
 }
+
+.chat-composer {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-em);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.chat-composer:focus-within {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-glow);
+}
+
+.composer-attach-row {
+  display: none;
+  padding: 10px 14px 0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.composer-attach-row.has-files { display: flex; }
+
+.attach-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 8px;
+  background: var(--red-dim);
+  border: 1px solid rgba(204,31,31,0.2);
+  border-radius: 20px;
+  font-size: 11.5px; font-weight: 600; color: var(--red);
+  font-family: var(--font-mono);
+  max-width: 200px;
+}
+.attach-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.attach-chip-x {
+  cursor: pointer; opacity: 0.55; font-size: 15px; line-height: 1;
+  flex-shrink: 0;
+}
+.attach-chip-x:hover { opacity: 1; }
+
 #chat-input {
-  flex: 1; padding: 11px 16px; border-radius: 24px;
-  background: #FFFFFF; border: 1px solid var(--border-em);
-  color: var(--text); font-family: var(--font); font-size: 15px;
+  width: 100%;
+  padding: 14px 16px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  resize: none;
+  min-height: 50px;
+  max-height: 180px;
+  line-height: 1.65;
+  overflow-y: auto;
+  display: block;
 }
 #chat-input::placeholder { color: var(--text-muted); }
-#chat-input:focus { outline: none; border-color: var(--red); }
+#chat-input:focus { outline: none; }
+
+.composer-toolbar {
+  display: flex; align-items: center;
+  padding: 8px 12px 10px;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+}
+
+#attach-btn {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--border-em);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-sub);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+#attach-btn:hover { background: var(--bg-hover); color: var(--red); border-color: var(--red); }
+#attach-btn svg { pointer-events: none; }
+
+.composer-hint {
+  font-size: 11px; color: var(--text-muted);
+  margin-left: 4px; display: none;
+}
+@media (min-width: 500px) { .composer-hint { display: block; } }
+
 #send-btn {
-  width: 40px; height: 40px; border-radius: 50%;
+  margin-left: auto;
+  width: 36px; height: 36px;
+  border-radius: 10px;
   background: var(--red); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.1s;
 }
-#send-btn:disabled { opacity: 0.4; cursor: default; }
+#send-btn:hover:not(:disabled) { opacity: 0.88; transform: scale(1.04); }
+#send-btn:disabled { opacity: 0.35; cursor: default; }
 #send-btn svg { fill: #FFFFFF; }
+
+.composer-disclaimer {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
 
 .chat-header-menu {
   display: none; width: 36px; height: 36px; border-radius: 8px;
@@ -1441,10 +1534,21 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
         <span>RenikGPT is thinking…</span>
       </div>
       <div id="chat-input-area">
-        <input id="chat-input" type="text" placeholder="Ask about any Nigerian regulation…">
-        <button id="send-btn" onclick="sendChat()">
-          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-        </button>
+        <div class="chat-composer">
+          <div class="composer-attach-row" id="attach-row"></div>
+          <textarea id="chat-input" rows="1" placeholder="Ask about any Nigerian regulation…"></textarea>
+          <div class="composer-toolbar">
+            <button id="attach-btn" type="button" title="Attach document (PDF, DOCX, TXT)" onclick="document.getElementById('chat-file-input').click()">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <input type="file" id="chat-file-input" style="display:none" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple>
+            <span class="composer-hint">Enter to send · Shift+Enter for new line</span>
+            <button id="send-btn" onclick="sendChat()" title="Send">
+              <svg viewBox="0 0 24 24" width="15" height="15"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="composer-disclaimer">RenikGPT is not a lawyer · Always verify with a qualified Nigerian solicitor</div>
       </div>
     </div>
 
@@ -2760,13 +2864,23 @@ async function callAI(payload) {
 async function sendChat() {
   const input = document.getElementById('chat-input');
   const q = input.value.trim();
-  if (!q) return;
+  if (!q && attachedFiles.length === 0) return;
+  const sendText = q || '[Attached document — please analyse and provide compliance insights]';
   input.value = '';
+  autoResizeTextarea(input);
+
+  // Clear attachments UI
+  const attachRow = document.getElementById('attach-row');
+  const fileNames = attachedFiles.map(f => f.name);
+  attachedFiles = [];
+  attachRow.innerHTML = '';
+  attachRow.classList.remove('has-files');
+
   document.getElementById('send-btn').disabled = true;
-  addMsg('user', q);
+  addMsg('user', sendText + (fileNames.length ? '\n\n📎 ' + fileNames.join(', ') : ''));
   const typing = document.getElementById('typing-indicator');
   typing.style.display = 'flex';
-  chatHistory.push({ role:'user', content:q });
+  chatHistory.push({ role:'user', content: sendText });
   try {
     const data = await callAI({ model:'claude-sonnet-4-20250514', max_tokens:1024, system:SYSTEM, messages:chatHistory });
     const reply = data.content?.[0]?.text || 'Sorry, I could not get a response.';
@@ -2783,11 +2897,52 @@ async function sendChat() {
 
 function quickAsk(el) {
   setView('chat');
-  document.getElementById('chat-input').value = el.textContent;
+  const input = document.getElementById('chat-input');
+  input.value = el.textContent;
+  autoResizeTextarea(input);
   sendChat();
 }
 
-document.getElementById('chat-input').addEventListener('keydown', e => { if(e.key==='Enter') sendChat(); });
+// ── Textarea auto-resize ──
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 180) + 'px';
+}
+
+// ── File attachment ──
+let attachedFiles = [];
+document.getElementById('chat-file-input').addEventListener('change', function() {
+  const newFiles = Array.from(this.files);
+  attachedFiles = [...attachedFiles, ...newFiles];
+  renderAttachChips();
+  this.value = '';
+});
+
+function renderAttachChips() {
+  const row = document.getElementById('attach-row');
+  row.innerHTML = '';
+  if (attachedFiles.length === 0) { row.classList.remove('has-files'); return; }
+  row.classList.add('has-files');
+  attachedFiles.forEach((f, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'attach-chip';
+    chip.innerHTML = `<span>📎 ${f.name}</span><span class="attach-chip-x" onclick="removeAttach(${i})">×</span>`;
+    row.appendChild(chip);
+  });
+}
+
+function removeAttach(i) {
+  attachedFiles.splice(i, 1);
+  renderAttachChips();
+}
+
+// ── Keydown: Enter sends, Shift+Enter newlines ──
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+document.getElementById('chat-input').addEventListener('input', function() {
+  autoResizeTextarea(this);
+});
 
 // ──────────────────────────────────────────────
 // REGULATIONS DB
