@@ -1851,6 +1851,10 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-q-options { display:grid; grid-template-columns:1fr 1fr; gap:10px; opacity:0; transform:translateY(16px); transition:all .4s .1s; }
 #view-journey .j-q-options.show { opacity:1; transform:translateY(0); }
 #view-journey .j-q-options.cols-1 { grid-template-columns:1fr; }
+#view-journey .j-q-options-scroll { display:grid; grid-template-columns:1fr 1fr; gap:8px; opacity:0; transform:translateY(16px); transition:all .4s .1s; max-height:320px; overflow-y:auto; padding-right:4px; }
+#view-journey .j-q-options-scroll.show { opacity:1; transform:translateY(0); }
+#view-journey .j-q-options-scroll::-webkit-scrollbar { width:3px; }
+#view-journey .j-q-options-scroll::-webkit-scrollbar-thumb { background:var(--j-border-em); border-radius:2px; }
 #view-journey .j-q-opt { background:var(--j-bg-s); border:1.5px solid var(--j-border-em); border-radius:var(--j-r); padding:14px 16px; font-size:14px; font-weight:500; color:var(--j-sub); cursor:pointer; transition:all .2s; text-align:left; }
 #view-journey .j-q-opt:hover { border-color:var(--j-green); color:var(--j-text); background:var(--j-green-dim); }
 #view-journey .j-q-opt.selected { border-color:var(--j-green); color:var(--j-green); background:var(--j-green-dim); }
@@ -2042,6 +2046,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   #view-journey .j-panel-body { padding:16px; }
   #view-journey .j-panel-header { padding:16px; }
   #view-journey .j-q-options { grid-template-columns:1fr; }
+  #view-journey .j-q-options-scroll { grid-template-columns:1fr 1fr; max-height:260px; }
   #view-journey .j-intake-wrap { padding:20px 16px; }
   #view-journey .j-q-text { font-size:22px; }
 }
@@ -4545,13 +4550,25 @@ function autoResizeTextarea(el) {
 
 // ── File attachment ──
 let attachedFiles = [];
-document.getElementById('chat-file-input').addEventListener('change', function() {
-  const newFiles = Array.from(this.files);
-  attachedFiles = [...attachedFiles, ...newFiles];
-  renderAttachChips();
-  this.value = '';
-});
+document.addEventListener('DOMContentLoaded', function() {
+  const chatFileInput = document.getElementById('chat-file-input');
+  if (chatFileInput) chatFileInput.addEventListener('change', function() {
+    const newFiles = Array.from(this.files);
+    attachedFiles = [...attachedFiles, ...newFiles];
+    renderAttachChips();
+    this.value = '';
+  });
 
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) {
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+    });
+    chatInput.addEventListener('input', function() {
+      autoResizeTextarea(this);
+    });
+  }
+});
 function renderAttachChips() {
   const row = document.getElementById('attach-row');
   row.innerHTML = '';
@@ -4569,14 +4586,6 @@ function removeAttach(i) {
   attachedFiles.splice(i, 1);
   renderAttachChips();
 }
-
-// ── Keydown: Enter sends, Shift+Enter newlines ──
-document.getElementById('chat-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
-});
-document.getElementById('chat-input').addEventListener('input', function() {
-  autoResizeTextarea(this);
-});
 
 // ──────────────────────────────────────────────
 // REGULATIONS DB
@@ -5074,8 +5083,11 @@ function prefillChecklistFromProfile(profile) {
 }
 
 // Close onboarding on backdrop click
-document.getElementById('onboard-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeOnboarding();
+document.addEventListener('DOMContentLoaded', function() {
+  const ob = document.getElementById('onboard-overlay');
+  if (ob) ob.addEventListener('click', function(e) {
+    if (e.target === this) closeOnboarding();
+  });
 });
 
 // ──────────────────────────────────────────────
@@ -6481,7 +6493,13 @@ async function leaveOrg() {
 // ═══════════════════════════════════════════════════════
 
 const jState = {
-  intake: { businessName:'', entityType:'', industry:'', state:'', turnover:'', hasEmployees:'', concerns:'' },
+  intake: {
+    businessName:'', cacRegistered:'', cacTimeline:'',
+    entityType:'', industry:'', industryOther:'',
+    state:'', turnover:'',
+    hasEmployees:'', employeeCount:'', hiringTimeline:'',
+    concerns:''
+  },
   journey: null,
   completed: new Set(),
   score: 0,
@@ -6491,16 +6509,104 @@ const jState = {
   activePhaseId: null
 };
 
-const J_QUESTIONS = [
-  { id:'businessName', label:'STEP 1 OF 6', text:'What is the name of your business?', type:'text', placeholder:'e.g. Apex Foods Limited', key:'businessName', required:true },
-  { id:'entityType', label:'STEP 2 OF 6', text:'What type of business entity are you registering?', type:'options', key:'entityType', required:true, options:['Sole Proprietorship','Business Name (Partnership)','Limited Liability Company (Ltd)','Non-Governmental Organisation (NGO)'] },
-  { id:'industry', label:'STEP 3 OF 6', text:'Which industry best describes your business?', type:'options', key:'industry', required:true, options:['Food & Beverage','Technology / Fintech','Retail & E-Commerce','Healthcare & Pharmaceuticals','Manufacturing','Consulting & Professional Services','Agriculture','Other'] },
-  { id:'state', label:'STEP 4 OF 6', text:'Which state will your business primarily operate from?', type:'options', key:'state', required:true, options:['Lagos','Abuja (FCT)','Rivers','Kano','Ogun','Delta','Oyo','Other State'] },
-  { id:'turnover', label:'STEP 5 OF 6', text:'What is your estimated annual turnover?', type:'options', key:'turnover', required:true, options:['Under ₦5 Million','₦5M – ₦25 Million','₦25M – ₦100 Million','Above ₦100 Million'] },
-  { id:'hasEmployees', label:'STEP 6 OF 6', text:'Will you be hiring employees?', type:'options', key:'hasEmployees', required:true, options:['Yes, immediately','Yes, in the next 12 months','No, solo for now','Unsure'] }
+// ── All 36 Nigerian states + FCT ──
+const NG_STATES = [
+  'Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno',
+  'Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT (Abuja)',
+  'Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi',
+  'Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo',
+  'Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'
 ];
 
+// ── Dynamic question builder ──
+// Each question is a function so it can inspect jState.intake and return
+// null to skip itself entirely.
+const J_QUESTION_DEFS = [
+  // Q0: Business name
+  () => ({ id:'businessName', text:'What is the name of your business?', type:'text',
+    placeholder:'e.g. Apex Foods Limited', key:'businessName', required:true }),
+
+  // Q1: CAC registered?
+  () => ({ id:'cacRegistered', text:'Is your business currently registered with the CAC (Corporate Affairs Commission)?',
+    type:'options', key:'cacRegistered', required:true,
+    options:['Yes — already registered','No — not yet registered'] }),
+
+  // Q2: CAC timeline (only if NOT registered)
+  () => jState.intake.cacRegistered === 'No — not yet registered'
+    ? { id:'cacTimeline', text:'When are you planning to register with the CAC?', type:'options',
+        key:'cacTimeline', required:true,
+        options:['Within a week','Within a month','Within 3 months','Within 6 months','Not sure yet'] }
+    : null,
+
+  // Q3: Entity type
+  () => ({ id:'entityType', text:'What type of business entity is this?', type:'options',
+    key:'entityType', required:true,
+    options:[
+      'Sole Proprietorship',
+      'Partnership',
+      'Limited Liability Company (Ltd)',
+      'Public Limited Company (PLC)',
+      'Non-Governmental Organisation (NGO)',
+      'Cooperative Society',
+      'Franchise',
+      'Joint Venture',
+      'Incorporated Trustee',
+      'Other'
+    ] }),
+
+  // Q4: Industry
+  () => ({ id:'industry', text:'Which industry best describes your business?', type:'options',
+    key:'industry', required:true,
+    options:[
+      'Food & Beverage','Technology / Fintech','Retail & E-Commerce',
+      'Healthcare & Pharmaceuticals','Manufacturing','Consulting & Professional Services',
+      'Agriculture','Real Estate & Construction','Education','Logistics & Transportation',
+      'Media & Entertainment','Oil & Gas','Hospitality & Tourism','Legal & Compliance',
+      'Other'
+    ] }),
+
+  // Q5: Industry "Other" text input (only if Other selected)
+  () => jState.intake.industry === 'Other'
+    ? { id:'industryOther', text:'Please describe your industry:', type:'text',
+        placeholder:'e.g. Waste Management, Renewable Energy…', key:'industryOther', required:true }
+    : null,
+
+  // Q6: State — all 36
+  () => ({ id:'state', text:'Which state will your business primarily operate from?',
+    type:'options-scroll', key:'state', required:true, options: NG_STATES }),
+
+  // Q7: Turnover
+  () => ({ id:'turnover', text:'What is your estimated annual turnover?', type:'options',
+    key:'turnover', required:true,
+    options:['Under ₦5 Million','₦5M – ₦25 Million','₦25M – ₦100 Million','Above ₦100 Million','Not sure yet'] }),
+
+  // Q8: Do you have employees RIGHT NOW?
+  () => ({ id:'hasEmployees', text:'Do you currently have any employees?', type:'options',
+    key:'hasEmployees', required:true,
+    options:['Yes','No'] }),
+
+  // Q9a: If YES — how many?
+  () => jState.intake.hasEmployees === 'Yes'
+    ? { id:'employeeCount', text:'How many employees do you currently have?', type:'options',
+        key:'employeeCount', required:true,
+        options:['1 – 5','6 – 20','21 – 50','51 – 200','200+'] }
+    : null,
+
+  // Q9b: If NO — planning to hire?
+  () => jState.intake.hasEmployees === 'No'
+    ? { id:'hiringTimeline', text:'Are you planning to hire employees?', type:'options',
+        key:'hiringTimeline', required:true,
+        options:['Yes — within 3 months','Yes — within 6–12 months','Not anytime soon','No plans to hire'] }
+    : null,
+];
+
+// Build the active question list by evaluating each def against current state
+function jBuildQuestions() {
+  return J_QUESTION_DEFS.map(fn => fn()).filter(q => q !== null);
+}
+
 let jCurrentQ = 0;
+let jActiveQuestions = [];
 
 // ── Screen management (internal to journey view) ──
 function jShowScreen(id) {
@@ -6514,8 +6620,15 @@ function jShowScreen(id) {
 
 function jInitIntake() {
   jCurrentQ = 0;
-  jState.intake = { businessName:'', entityType:'', industry:'', state:'', turnover:'', hasEmployees:'', concerns:'' };
+  jState.intake = {
+    businessName:'', cacRegistered:'', cacTimeline:'',
+    entityType:'', industry:'', industryOther:'',
+    state:'', turnover:'',
+    hasEmployees:'', employeeCount:'', hiringTimeline:'',
+    concerns:''
+  };
   jState.journey = null; jState.completed = new Set(); jState.score = 0; jState.activeStep = null;
+  jActiveQuestions = jBuildQuestions();
   jShowScreen('j-screen-intake');
   jRenderProgress();
   jShowQuestion(0);
@@ -6524,16 +6637,17 @@ function jInitIntake() {
 function jRenderProgress() {
   const prog = document.getElementById('j-q-progress');
   if (!prog) return;
-  prog.innerHTML = J_QUESTIONS.map((q,i) =>
+  prog.innerHTML = jActiveQuestions.map((q,i) =>
     `<div class="j-q-dot ${i<jCurrentQ?'done':i===jCurrentQ?'active':''}"></div>`
   ).join('');
 }
 
 function jShowQuestion(idx) {
-  const q = J_QUESTIONS[idx];
+  const q = jActiveQuestions[idx];
+  if (!q) return;
   const label = document.getElementById('j-q-label');
-  const text = document.getElementById('j-q-text');
-  const area = document.getElementById('j-q-answer-area');
+  const text  = document.getElementById('j-q-text');
+  const area  = document.getElementById('j-q-answer-area');
   const actions = document.getElementById('j-q-actions');
   const btnSkip = document.getElementById('j-btn-skip');
   if (!label || !text || !area) return;
@@ -6542,18 +6656,33 @@ function jShowQuestion(idx) {
   area.innerHTML = ''; area.style.opacity = 0; area.style.transform = 'translateY(16px)';
 
   setTimeout(() => {
-    label.textContent = q.label;
-    text.textContent = q.text;
+    label.textContent = `STEP ${idx+1} OF ${jActiveQuestions.length}`;
+    text.textContent  = q.text;
     [label, text].forEach(el => el.classList.add('show'));
 
     if (q.type === 'text') {
-      area.innerHTML = `<input class="j-q-input show" id="j-q-current-input" type="text" placeholder="${q.placeholder||''}" value="${jState.intake[q.key]||''}" onkeydown="if(event.key==='Enter')jNextQuestion()">`;
+      area.innerHTML = `<input class="j-q-input show" id="j-q-current-input" type="text"
+        placeholder="${q.placeholder||''}" value="${jState.intake[q.key]||''}"
+        onkeydown="if(event.key==='Enter')jNextQuestion()">`;
+
+    } else if (q.type === 'options-scroll') {
+      // Full 36-state scrollable grid
+      area.innerHTML = `
+        <div class="j-q-options-scroll show">
+          ${q.options.map(o =>
+            `<div class="j-q-opt${jState.intake[q.key]===o?' selected':''}"
+              onclick="jSelectOption(this,'${o.replace(/'/g,"&#39;")}','${q.key}')">${o}</div>`
+          ).join('')}
+        </div>`;
+
     } else {
-      const cols = q.options.length > 4 ? 'cols-1' : '';
-      area.innerHTML = `<div class="j-q-options show ${cols}">${q.options.map(o =>
-        `<div class="j-q-opt${jState.intake[q.key]===o?' selected':''}" onclick="jSelectOption(this,'${o.replace(/'/g,"&#39;")}','${q.key}')">${o}</div>`
+      // standard options grid
+      area.innerHTML = `<div class="j-q-options show">${q.options.map(o =>
+        `<div class="j-q-opt${jState.intake[q.key]===o?' selected':''}"
+          onclick="jSelectOption(this,'${o.replace(/'/g,"&#39;")}','${q.key}')">${o}</div>`
       ).join('')}</div>`;
     }
+
     area.style.transition = 'all .4s .1s';
     requestAnimationFrame(() => { area.style.opacity = 1; area.style.transform = 'translateY(0)'; });
     if (actions) actions.classList.add('show');
@@ -6564,7 +6693,7 @@ function jShowQuestion(idx) {
 }
 
 function jSelectOption(el, val, key) {
-  el.closest('.j-q-options').querySelectorAll('.j-q-opt').forEach(o => o.classList.remove('selected'));
+  el.closest('.j-q-options, .j-q-options-scroll').querySelectorAll('.j-q-opt').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   jState.intake[key] = val;
   const next = document.getElementById('j-btn-next');
@@ -6572,21 +6701,25 @@ function jSelectOption(el, val, key) {
 }
 
 function jNextQuestion() {
-  const q = J_QUESTIONS[jCurrentQ];
+  const q = jActiveQuestions[jCurrentQ];
   if (q.type === 'text') {
     const input = document.getElementById('j-q-current-input');
     if (input) jState.intake[q.key] = input.value.trim();
   }
   if (q.required && !jState.intake[q.key]) return;
+
+  // Rebuild question list — branching may change after each answer
+  jActiveQuestions = jBuildQuestions();
   jCurrentQ++;
-  if (jCurrentQ >= J_QUESTIONS.length) { jStartGeneration(); return; }
+  if (jCurrentQ >= jActiveQuestions.length) { jStartGeneration(); return; }
   jRenderProgress();
   jShowQuestion(jCurrentQ);
 }
 
 function jSkipQuestion() {
+  jActiveQuestions = jBuildQuestions();
   jCurrentQ++;
-  if (jCurrentQ >= J_QUESTIONS.length) { jStartGeneration(); return; }
+  if (jCurrentQ >= jActiveQuestions.length) { jStartGeneration(); return; }
   jRenderProgress();
   jShowQuestion(jCurrentQ);
 }
@@ -6667,17 +6800,23 @@ RULES:
 8. Generate at least 8–14 steps total across all 4 phases so the business gets a thorough roadmap.`;
 
 async function jGenerateJourney() {
+  const i = jState.intake;
+  const effectiveIndustry = i.industry === 'Other' && i.industryOther ? i.industryOther : i.industry;
+  const employeeInfo = i.hasEmployees === 'Yes'
+    ? `Currently has ${i.employeeCount} employees`
+    : `No current employees — hiring plan: ${i.hiringTimeline || 'not specified'}`;
+
   const userMsg = `Business profile:
-- Business Name: ${jState.intake.businessName}
-- Entity Type: ${jState.intake.entityType}
-- Industry: ${jState.intake.industry}
-- Operating State: ${jState.intake.state}
-- Estimated Annual Turnover: ${jState.intake.turnover}
-- Has Employees: ${jState.intake.hasEmployees}
+- Business Name: ${i.businessName}
+- CAC Registration Status: ${i.cacRegistered}${i.cacTimeline ? ` (plans to register: ${i.cacTimeline})` : ''}
+- Entity Type: ${i.entityType}
+- Industry: ${effectiveIndustry}
+- Operating State: ${i.state}
+- Estimated Annual Turnover: ${i.turnover}
+- Employees: ${employeeInfo}
 
-Generate the full compliance journey for this business.`;
+Generate the full compliance journey for this business. If not yet CAC-registered, include CAC registration as a critical first step.`;
 
-  // Route through Supabase edge function via index.html's callAI()
   const data = await callAI({
     model: 'claude-sonnet-4-6',
     max_tokens: 4000,
@@ -6688,6 +6827,22 @@ Generate the full compliance journey for this business.`;
   const raw = data.content.map(c => c.text || '').join('');
   const clean = raw.replace(/```json|```/g, '').trim();
   jState.journey = JSON.parse(clean);
+
+  // Save intake to Supabase profiles table for this user
+  if (currentUser && currentUser.id !== 'guest') {
+    try {
+      await sb.from('profiles').upsert({
+        id: currentUser.id,
+        email: currentUser.email,
+        biz_name: i.businessName,
+        biz_type: i.entityType,
+        industry: effectiveIndustry,
+        turnover: i.turnover,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' });
+    } catch(e) { console.warn('Profile save error:', e); }
+  }
+
   jBuildDashboard();
   jShowScreen('j-screen-dashboard');
 }
@@ -7081,8 +7236,15 @@ function jMarkFromForm() {
 
 function jRestartApp() {
   if (!confirm('Restart your compliance journey? All progress will be lost.')) return;
-  jState.intake = { businessName:'', entityType:'', industry:'', state:'', turnover:'', hasEmployees:'', concerns:'' };
+  jState.intake = {
+    businessName:'', cacRegistered:'', cacTimeline:'',
+    entityType:'', industry:'', industryOther:'',
+    state:'', turnover:'',
+    hasEmployees:'', employeeCount:'', hiringTimeline:'',
+    concerns:''
+  };
   jState.journey = null; jState.completed = new Set(); jState.score = 0; jState.activeStep = null;
+  jActiveQuestions = [];
   jCurrentQ = 0;
   jShowScreen('j-screen-intake');
   jInitIntake();
