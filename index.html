@@ -3010,8 +3010,21 @@ async function doLogout() {
   allSessions = [];
   currentSessionId = null;
   chatHistory = [];
+  currentOrg = null;
   await sb.auth.signOut();
   currentUser = null;
+  // Reset sidebar bottom to guest state
+  document.getElementById('sidebar-user-block').style.display = 'none';
+  document.getElementById('sidebar-guest-btn').style.display = 'flex';
+  // Hide org pill if present
+  const pill = document.getElementById('org-context-pill');
+  if (pill) pill.style.display = 'none';
+  // Hide admin nav
+  const adminNav = document.getElementById('admin-nav-item');
+  if (adminNav) adminNav.style.display = 'none';
+  // Reset sessions list
+  const sessEl = document.getElementById('sessions-list');
+  if (sessEl) sessEl.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 10px">No saved chats yet.</div>';
   document.getElementById('auth-overlay').style.display = 'flex';
 }
 
@@ -3040,7 +3053,6 @@ function onAuth(user) {
   loadTemplates();
   if (user.id !== 'guest') {
     loadUploadHistory();
-    loadUserOrg();
     loadProfileFromSupabase(user); // fetch from Supabase, fall back to localStorage
     loadChatHistory(); // restore saved conversations
     setupRealtimeSync(); // live sync across tabs/devices
@@ -3946,6 +3958,7 @@ function renderPDFResult(d) {
 
 async function savePDFToSupabase() {
   if (!pdfAnalysisResult || !currentUser) return;
+  if (currentUser.id === 'guest') { showToast('Sign in to save to the Regulatory Database', 'var(--gold)'); return; }
   const btn = document.querySelector('.save-reg-btn');
   btn.disabled = true; btn.textContent = 'Saving…';
   try {
@@ -3957,27 +3970,14 @@ async function savePDFToSupabase() {
       category: 'uploaded',
       severity: 'info'
     });
-    await sb.from('uploaded_docs').insert({
-      user_id: currentUser.id,
-      ...(currentOrg ? { org_id: currentOrg.id } : {}),
-      file_name: pdfAnalysisResult.file_name,
-      agency: pdfAnalysisResult.agency,
-      summary: pdfAnalysisResult.summary,
-      key_points: pdfAnalysisResult.key_points
-    });
-    if (!regErr) {
-      btn.textContent = '✓ Saved to Regulatory Database';
-      showToast('Saved to Regulatory Database', 'var(--red)');
-      loadRegs();
-      loadUploadHistory();
-    } else {
-      btn.textContent = 'Save to Regulatory Database';
-      btn.disabled = false;
-      showToast('Error saving to database', 'var(--red)');
-    }
+    if (regErr) throw new Error(regErr.message);
+    btn.textContent = '✓ Saved to Regulatory Database';
+    showToast('Saved to Regulatory Database', 'var(--red)');
+    loadRegs();
   } catch(e) {
     btn.textContent = 'Save to Regulatory Database';
     btn.disabled = false;
+    showToast('Error saving: ' + e.message, 'var(--red)');
   }
 }
 
@@ -4731,7 +4731,7 @@ async function loadAlerts() {
         </div>
         <div class="alert-title">${a.title}</div>
         <div class="alert-desc">${a.description}</div>
-        <button class="alert-ask" data-title="${a.title.replace(/"/g,'&quot;')}" onclick="quickAsk({textContent:'Explain the impact of: '+this.dataset.title})" style="margin-top:10px">Ask RenikGPT →</button>
+        <button class="alert-ask" onclick="askAboutAlert(${JSON.stringify(a.title).replace(/"/g,'&quot;')})" style="margin-top:10px">Ask RenikGPT →</button>
       </div>
     </div>
   `).join('');
@@ -4743,6 +4743,13 @@ function timeSince(dateStr) {
   if (diff < 3600) return Math.floor(diff/60)+'m ago';
   if (diff < 86400) return Math.floor(diff/3600)+'h ago';
   return Math.floor(diff/86400)+'d ago';
+}
+
+function askAboutAlert(title) {
+  setView('chat');
+  const q = `Explain the compliance impact of this regulatory alert: "${title}". What do Nigerian businesses need to do in response?`;
+  document.getElementById('chat-input').value = q;
+  sendChat();
 }
 
 // Supabase realtime subscription for new alerts
@@ -4878,10 +4885,6 @@ function exportChecklistPDF() {
 // ADMIN PANEL FUNCTIONS
 // ══════════════════════════════════════════════
 let _adminAll = [];
-
-function isAdmin() {
-  return !!(currentUser && ADMIN_EMAILS.includes(currentUser.email));
-}
 
 function maybeShowAdminNav() {
   const el = document.getElementById('admin-nav-item');
