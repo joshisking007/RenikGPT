@@ -3009,6 +3009,165 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       </div><!-- /team-org-panel -->
     </div><!-- /view-team -->
 
+<!-- ═══════════════════════════════════════════════════════
+     COMPLIANCE JOURNEY VIEW
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="view-journey">
+
+  <!-- INTAKE SCREEN -->
+  <div id="j-screen-intake" class="j-screen j-active">
+    <div class="j-intake-wrap">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:48px">
+        <div class="chat-header-menu" onclick="openSidebar()" style="color:var(--j-sub)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+        <div class="j-intake-logo" style="margin-bottom:0"><span></span>RenikGPT</div>
+      </div>
+      <div class="j-q-progress" id="j-q-progress"></div>
+      <div class="j-q-label" id="j-q-label"></div>
+      <div class="j-q-text" id="j-q-text"></div>
+      <div id="j-q-answer-area"></div>
+      <div class="j-q-actions" id="j-q-actions">
+        <button class="j-btn-next" id="j-btn-next" onclick="jNextQuestion()">Continue →</button>
+        <button class="j-btn-skip" id="j-btn-skip" onclick="jSkipQuestion()">Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERATING SCREEN -->
+  <div id="j-screen-generating" class="j-screen">
+    <div class="j-gen-inner">
+      <div class="j-gen-ring">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="var(--j-bg-h)" stroke-width="6"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="var(--j-green)" stroke-width="6"
+            stroke-dasharray="50 164" stroke-linecap="round" transform="rotate(-90 40 40)"/>
+        </svg>
+      </div>
+      <div class="j-gen-title">Building Your Compliance Journey</div>
+      <div class="j-gen-sub">Analysing Nigerian regulations relevant to your business type and industry.</div>
+      <div class="j-gen-steps">
+        <div class="j-gen-step active" id="j-gs-1"><div class="j-gen-step-dot"></div>Identifying applicable agencies</div>
+        <div class="j-gen-step" id="j-gs-2"><div class="j-gen-step-dot"></div>Mapping regulatory requirements</div>
+        <div class="j-gen-step" id="j-gs-3"><div class="j-gen-step-dot"></div>Sourcing legal citations</div>
+        <div class="j-gen-step" id="j-gs-4"><div class="j-gen-step-dot"></div>Calculating compliance weights</div>
+        <div class="j-gen-step" id="j-gs-5"><div class="j-gen-step-dot"></div>Generating your journey</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SCREEN -->
+  <div id="j-screen-dashboard" class="j-screen">
+    <div id="j-dash-sidebar">
+      <div class="j-sidebar-top">
+        <div class="j-s-logo"><div class="j-s-logo-dot"></div>RenikGPT</div>
+        <div class="j-s-biz-name" id="j-s-biz-name">—</div>
+        <div class="j-s-biz-type" id="j-s-biz-type">—</div>
+        <div class="j-s-tags" id="j-s-tags"></div>
+      </div>
+      <div class="j-score-section">
+        <div class="j-score-ring-wrap">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle id="j-ring-bg" cx="70" cy="70" r="54"/>
+            <circle id="j-ring-fill" cx="70" cy="70" r="54"
+              stroke-dasharray="339.3" stroke-dashoffset="339.3"
+              transform="rotate(-90 70 70)"/>
+          </svg>
+          <div class="j-score-num">
+            <div id="j-score-value">0</div>
+            <div class="j-score-pct">/ 100</div>
+          </div>
+        </div>
+        <div id="j-score-label">Not Started</div>
+        <div class="j-score-detail" id="j-score-detail">Complete steps below<br>to grow your score</div>
+      </div>
+      <div class="j-phase-nav" id="j-phase-nav"></div>
+    </div>
+
+    <div id="j-dash-main">
+      <div class="j-dash-header">
+        <div class="chat-header-menu" onclick="openSidebar()" style="color:var(--j-sub);margin-right:6px"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+        <div>
+          <div class="j-dash-title">Compliance Journey</div>
+          <div class="j-dash-subtitle" id="j-dash-subtitle">Your personalised roadmap to full compliance</div>
+        </div>
+        <button class="j-btn-restart" onclick="jRestartApp()">↺ Restart</button>
+      </div>
+      <div class="j-dash-body" id="j-dash-body">
+        <div class="j-ai-summary" id="j-ai-summary">
+          <div class="j-ai-icon">🤖</div>
+          <div class="j-ai-summary-text" id="j-ai-summary-text">Loading your compliance summary…</div>
+        </div>
+        <div id="j-phases-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP DETAIL PANEL (positioned inside view-journey) -->
+  <div id="j-panel-overlay" onclick="jClosePanel()"></div>
+  <div id="j-step-panel">
+    <div class="j-panel-header">
+      <div class="j-panel-header-top">
+        <div>
+          <div class="j-panel-agency" id="j-panel-agency"></div>
+          <div class="j-panel-title" id="j-panel-title"></div>
+        </div>
+        <button class="j-panel-close" onclick="jClosePanel()">✕</button>
+      </div>
+      <div class="j-panel-meta-row" id="j-panel-meta-row"></div>
+    </div>
+    <div class="j-panel-body">
+      <div class="j-panel-section">
+        <div class="j-panel-section-title">Why This Matters</div>
+        <div class="j-panel-desc" id="j-panel-why"></div>
+      </div>
+      <div class="j-panel-section">
+        <div class="j-panel-section-title">What You'll Need</div>
+        <div class="j-docs-list" id="j-panel-docs"></div>
+      </div>
+      <div class="j-panel-section">
+        <div class="j-panel-section-title">Legal Basis — Tap to open source ↗</div>
+        <div class="j-citations-list" id="j-panel-citations"></div>
+      </div>
+    </div>
+    <div class="j-panel-cta">
+      <button class="j-btn-begin" id="j-btn-begin-step" onclick="jOpenFormFill()">
+        <span>⚡</span> Begin This Step
+      </button>
+      <button class="j-btn-complete" id="j-btn-mark-complete" onclick="jMarkStepComplete()">
+        ✓ Mark as Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- FORM FILL SCREEN -->
+  <div id="j-screen-form" class="j-screen">
+    <div class="j-form-topbar">
+      <button class="j-form-back" onclick="jCloseForm()">← Back</button>
+      <div class="j-form-topbar-info">
+        <div class="j-form-topbar-title" id="j-form-topbar-title">Pre-filled Form</div>
+        <div class="j-form-topbar-sub" id="j-form-topbar-sub">Review and complete your details</div>
+      </div>
+      <div class="j-agency-badge" id="j-form-agency-badge"></div>
+    </div>
+    <div class="j-form-body" id="j-form-body">
+      <div class="j-form-loading">
+        <div class="j-form-loading-ring">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--j-bg-h)" stroke-width="4"/>
+            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--j-green)" stroke-width="4"
+              stroke-dasharray="22 66" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+          </svg>
+        </div>
+        <div>Generating your pre-filled form…</div>
+      </div>
+    </div>
+    <div class="j-form-actions">
+      <button class="j-btn-download" onclick="jDownloadForm()">⬇ Download Form</button>
+      <button class="j-btn-mark-done" onclick="jMarkFromForm()">✓ Mark Step Complete</button>
+    </div>
+  </div>
+
+</div><!-- /view-journey -->
+
   </div>
 </div>
 <nav id="mobile-nav">
@@ -3391,7 +3550,9 @@ function setView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.mnav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('view-'+name).classList.add('active');
+  const targetView = document.getElementById('view-'+name);
+  if (!targetView) { console.warn('setView: no element #view-'+name); return; }
+  targetView.classList.add('active');
   document.querySelectorAll(`[data-view="${name}"]`).forEach(el => el.classList.add('active'));
   if (name === 'admin') adminViewEntered();
   if (name === 'team')  teamViewEntered();
@@ -3400,9 +3561,14 @@ function setView(name) {
     const mb = document.getElementById('mobile-alert-badge');
     if (mb) mb.style.display='none';
   }
+  if (name==='regulations') renderRegs();
   if (name==='reports') renderReports();
   if (name==='templates') loadTemplates();
   if (name==='docmap') dcmInit();
+  if (name==='journey') {
+    // jState and jInitIntake are defined in the journey script block below
+    if (typeof jState !== 'undefined' && !jState.journey) jInitIntake();
+  }
   closeSidebar();
 }
 
@@ -3547,7 +3713,7 @@ function fmtText(raw) {
 }
 
 // ── AI: tries /api/chat (Cloudflare Pages), then falls back to Supabase Edge Function ──
-async function callAI(payload) {
+async async function callAI(payload) {
   // Option A: Cloudflare Pages Function at /api/chat
   try {
     const res = await fetch('/api/chat', {
@@ -5774,160 +5940,6 @@ async function leaveOrg() {
 })();
 </script>
 
-<!-- ═══════════════════════════════════════════════════════
-     COMPLIANCE JOURNEY VIEW
-═══════════════════════════════════════════════════════ -->
-<div class="view" id="view-journey">
-
-  <!-- INTAKE SCREEN -->
-  <div id="j-screen-intake" class="j-screen j-active">
-    <div class="j-intake-wrap">
-      <div class="j-intake-logo"><span></span>RenikGPT</div>
-      <div class="j-q-progress" id="j-q-progress"></div>
-      <div class="j-q-label" id="j-q-label"></div>
-      <div class="j-q-text" id="j-q-text"></div>
-      <div id="j-q-answer-area"></div>
-      <div class="j-q-actions" id="j-q-actions">
-        <button class="j-btn-next" id="j-btn-next" onclick="jNextQuestion()">Continue →</button>
-        <button class="j-btn-skip" id="j-btn-skip" onclick="jSkipQuestion()">Skip</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- GENERATING SCREEN -->
-  <div id="j-screen-generating" class="j-screen">
-    <div class="j-gen-inner">
-      <div class="j-gen-ring">
-        <svg width="80" height="80" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="34" fill="none" stroke="var(--j-bg-h)" stroke-width="6"/>
-          <circle cx="40" cy="40" r="34" fill="none" stroke="var(--j-green)" stroke-width="6"
-            stroke-dasharray="50 164" stroke-linecap="round" transform="rotate(-90 40 40)"/>
-        </svg>
-      </div>
-      <div class="j-gen-title">Building Your Compliance Journey</div>
-      <div class="j-gen-sub">Analysing Nigerian regulations relevant to your business type and industry.</div>
-      <div class="j-gen-steps">
-        <div class="j-gen-step active" id="j-gs-1"><div class="j-gen-step-dot"></div>Identifying applicable agencies</div>
-        <div class="j-gen-step" id="j-gs-2"><div class="j-gen-step-dot"></div>Mapping regulatory requirements</div>
-        <div class="j-gen-step" id="j-gs-3"><div class="j-gen-step-dot"></div>Sourcing legal citations</div>
-        <div class="j-gen-step" id="j-gs-4"><div class="j-gen-step-dot"></div>Calculating compliance weights</div>
-        <div class="j-gen-step" id="j-gs-5"><div class="j-gen-step-dot"></div>Generating your journey</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DASHBOARD SCREEN -->
-  <div id="j-screen-dashboard" class="j-screen">
-    <div id="j-dash-sidebar">
-      <div class="j-sidebar-top">
-        <div class="j-s-logo"><div class="j-s-logo-dot"></div>RenikGPT</div>
-        <div class="j-s-biz-name" id="j-s-biz-name">—</div>
-        <div class="j-s-biz-type" id="j-s-biz-type">—</div>
-        <div class="j-s-tags" id="j-s-tags"></div>
-      </div>
-      <div class="j-score-section">
-        <div class="j-score-ring-wrap">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <circle id="j-ring-bg" cx="70" cy="70" r="54"/>
-            <circle id="j-ring-fill" cx="70" cy="70" r="54"
-              stroke-dasharray="339.3" stroke-dashoffset="339.3"
-              transform="rotate(-90 70 70)"/>
-          </svg>
-          <div class="j-score-num">
-            <div id="j-score-value">0</div>
-            <div class="j-score-pct">/ 100</div>
-          </div>
-        </div>
-        <div id="j-score-label">Not Started</div>
-        <div class="j-score-detail" id="j-score-detail">Complete steps below<br>to grow your score</div>
-      </div>
-      <div class="j-phase-nav" id="j-phase-nav"></div>
-    </div>
-
-    <div id="j-dash-main">
-      <div class="j-dash-header">
-        <div>
-          <div class="j-dash-title">Compliance Journey</div>
-          <div class="j-dash-subtitle" id="j-dash-subtitle">Your personalised roadmap to full compliance</div>
-        </div>
-        <button class="j-btn-restart" onclick="jRestartApp()">↺ Restart</button>
-      </div>
-      <div class="j-dash-body" id="j-dash-body">
-        <div class="j-ai-summary" id="j-ai-summary">
-          <div class="j-ai-icon">🤖</div>
-          <div class="j-ai-summary-text" id="j-ai-summary-text">Loading your compliance summary…</div>
-        </div>
-        <div id="j-phases-container"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP DETAIL PANEL (positioned inside view-journey) -->
-  <div id="j-panel-overlay" onclick="jClosePanel()"></div>
-  <div id="j-step-panel">
-    <div class="j-panel-header">
-      <div class="j-panel-header-top">
-        <div>
-          <div class="j-panel-agency" id="j-panel-agency"></div>
-          <div class="j-panel-title" id="j-panel-title"></div>
-        </div>
-        <button class="j-panel-close" onclick="jClosePanel()">✕</button>
-      </div>
-      <div class="j-panel-meta-row" id="j-panel-meta-row"></div>
-    </div>
-    <div class="j-panel-body">
-      <div class="j-panel-section">
-        <div class="j-panel-section-title">Why This Matters</div>
-        <div class="j-panel-desc" id="j-panel-why"></div>
-      </div>
-      <div class="j-panel-section">
-        <div class="j-panel-section-title">What You'll Need</div>
-        <div class="j-docs-list" id="j-panel-docs"></div>
-      </div>
-      <div class="j-panel-section">
-        <div class="j-panel-section-title">Legal Basis — Tap to open source ↗</div>
-        <div class="j-citations-list" id="j-panel-citations"></div>
-      </div>
-    </div>
-    <div class="j-panel-cta">
-      <button class="j-btn-begin" id="j-btn-begin-step" onclick="jOpenFormFill()">
-        <span>⚡</span> Begin This Step
-      </button>
-      <button class="j-btn-complete" id="j-btn-mark-complete" onclick="jMarkStepComplete()">
-        ✓ Mark as Complete
-      </button>
-    </div>
-  </div>
-
-  <!-- FORM FILL SCREEN -->
-  <div id="j-screen-form" class="j-screen">
-    <div class="j-form-topbar">
-      <button class="j-form-back" onclick="jCloseForm()">← Back</button>
-      <div class="j-form-topbar-info">
-        <div class="j-form-topbar-title" id="j-form-topbar-title">Pre-filled Form</div>
-        <div class="j-form-topbar-sub" id="j-form-topbar-sub">Review and complete your details</div>
-      </div>
-      <div class="j-agency-badge" id="j-form-agency-badge"></div>
-    </div>
-    <div class="j-form-body" id="j-form-body">
-      <div class="j-form-loading">
-        <div class="j-form-loading-ring">
-          <svg width="36" height="36" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--j-bg-h)" stroke-width="4"/>
-            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--j-green)" stroke-width="4"
-              stroke-dasharray="22 66" stroke-linecap="round" transform="rotate(-90 18 18)"/>
-          </svg>
-        </div>
-        <div>Generating your pre-filled form…</div>
-      </div>
-    </div>
-    <div class="j-form-actions">
-      <button class="j-btn-download" onclick="jDownloadForm()">⬇ Download Form</button>
-      <button class="j-btn-mark-done" onclick="jMarkFromForm()">✓ Mark Step Complete</button>
-    </div>
-  </div>
-
-</div><!-- /view-journey -->
 
 <!-- ONBOARDING WIZARD -->
 <div id="onboard-overlay">
@@ -6135,14 +6147,8 @@ function jShowScreen(id) {
   if (el) el.classList.add('j-active');
 }
 
-// ── Init when journey view becomes active ──
-const _origSetView = setView;
-function setView(name) {
-  _origSetView(name);
-  if (name === 'journey' && !jState.journey) {
-    jInitIntake();
-  }
-}
+// ── Journey init is handled inside setView() in the main script block ──
+// No patching needed here.
 
 function jInitIntake() {
   jCurrentQ = 0;
