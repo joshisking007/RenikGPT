@@ -3481,6 +3481,9 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
           <div class="j-ai-icon">🤖</div>
           <div class="j-ai-summary-text" id="j-ai-summary-text">Loading your compliance summary…</div>
         </div>
+        <!-- FIX 3 & 4: Agency breakdown and deadline tracker -->
+        <div id="j-agency-breakdown" style="margin-top:20px"></div>
+        <div id="j-deadline-tracker" style="margin-top:20px"></div>
         <div id="j-phases-container"></div>
       </div>
     </div>
@@ -6861,7 +6864,10 @@ function jShowQuestion(idx) {
   area.innerHTML = ''; area.style.opacity = 0; area.style.transform = 'translateY(16px)';
 
   setTimeout(() => {
-    label.textContent = `STEP ${idx+1} OF ${jActiveQuestions.length}`;
+    // FIX 1: Use progress bar instead of "X OF Y" since Y is dynamic (branching questions)
+    const progressPercent = Math.round(((idx + 1) / Math.max(jActiveQuestions.length, 1)) * 100);
+    label.textContent = `${progressPercent}% complete`;
+    label.style.opacity = '0.7';
     text.textContent  = q.text;
     [label, text].forEach(el => el.classList.add('show'));
 
@@ -6954,16 +6960,135 @@ function jTriggerSlotUpload(slotId) {
 function jHandleSlotUpload(input, slotId) {
   const file = input.files[0];
   if (!file) return;
-  jModuleDUploads[slotId] = { name: file.name, size: file.size };
+  
+  // Store file temporarily and trigger AI scan
+  const slot = J_UPLOAD_SLOTS.find(s => s.id === slotId);
   const row = document.getElementById(`j-slot-${slotId}`);
   const status = document.getElementById(`j-slot-status-${slotId}`);
-  if (row) row.classList.add('has-file');
-  if (status) status.textContent = '✓ Uploaded';
-  // Also add to vault with slot context
-  const slot = J_UPLOAD_SLOTS.find(s => s.id === slotId);
-  jVault.push({ stepId: 'intake', stepTitle: slot ? slot.label : slotId,
-    name: file.name, size: file.size, uploadedAt: new Date().toISOString(), verified: false });
-  jUpdateVaultCount();
+  
+  // Show scanning state
+  if (status) status.textContent = '⏳ Scanning…';
+  if (row) row.classList.add('scanning');
+  
+  // Scan with AI
+  jScanDocumentAI(file, slotId, slot).then(result => {
+    jModuleDUploads[slotId] = { 
+      name: file.name, 
+      size: file.size,
+      scanned: true,
+      data: result.data,
+      expiryWarning: result.expiryWarning,
+      expiryDate: result.expiryDate
+    };
+    
+    if (row) {
+      row.classList.remove('scanning');
+      row.classList.add('has-file');
+    }
+    if (status) {
+      status.innerHTML = result.expiryWarning 
+        ? `✓ Scanned · ⚠️ Expires ${result.expiryDate}`
+        : '✓ Scanned';
+    }
+    
+    // Add to vault with extracted data
+    jVault.push({ 
+      stepId: 'intake', 
+      stepTitle: slot ? slot.label : slotId,
+      name: file.name, 
+      size: file.size, 
+      uploadedAt: new Date().toISOString(), 
+      verified: true,
+      scannedData: result.data,
+      expiryDate: result.expiryDate
+    });
+    jUpdateVaultCount();
+  }).catch(e => {
+    // If scanning fails, still accept the file but mark as unverified
+    jModuleDUploads[slotId] = { name: file.name, size: file.size, scanned: false };
+    if (row) row.classList.add('has-file');
+    if (status) status.textContent = '✓ Uploaded (not scanned)';
+    console.error('Document scan error:', e);
+  });
+}
+
+// FIX 2: AI document scanning function
+async function jScanDocumentAI(file, slotId, slot) {
+  try {
+    // Convert file to base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+
+    // Determine media type
+    let mediaType = 'application/pdf';
+    if (file.type.startsWith('image/')) mediaType = file.type;
+
+    // Call Claude to extract document data
+    const data = await callAI({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: `You are a Nigerian business document analyzer. Extract key information from documents.
+Return ONLY valid JSON with no markdown:
+{
+  "docType": "document type (CAC, TIN, VAT, ID, etc)",
+  "businessName": "extracted business name or null",
+  "rcNumber": "RC number if present or null",
+  "registrationDate": "ISO date if found or null",
+  "expiryDate": "ISO date if present or null",
+  "tin": "TIN number if found or null",
+  "otherData": "any other critical info"
+}`,
+      messages: [{
+        role: 'user',
+        content: [
+          { 
+            type: mediaType === 'application/pdf' ? 'document' : 'image',
+            source: {
+              type: 'base64',
+              media_type: mediaType,
+              data: base64
+            }
+          },
+          { 
+            type: 'text',
+            text: `Extract all critical business/identification information from this ${slot?.label || 'document'}. Focus on: name, registration number, dates (effective/expiry/issue), ID number if applicable.`
+          }
+        ]
+      }]
+    });
+
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const extracted = JSON.parse(clean);
+
+    // Check for expiry
+    let expiryWarning = false;
+    let expiryDate = extracted.expiryDate;
+    
+    if (expiryDate) {
+      const expiry = new Date(expiryDate);
+      const today = new Date();
+      const daysUntilExpiry = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+      
+      // Warn if expires within 90 days
+      if (daysUntilExpiry < 90 && daysUntilExpiry >= 0) {
+        expiryWarning = true;
+      }
+    }
+
+    return {
+      data: extracted,
+      expiryWarning,
+      expiryDate: expiryDate ? new Date(expiryDate).toLocaleDateString('en-NG') : null
+    };
+  } catch(e) {
+    console.error('Document scan error:', e);
+    throw e;
+  }
 }
 
 // ── Step-level document uploads ──
@@ -7208,8 +7333,30 @@ Generate the complete compliance journey for this business.`;
   jShowScreen('j-screen-dashboard');
 }
 
+// FIX 5: Load saved progress from Supabase
+async function jLoadProgress() {
+  if (!currentUser || currentUser.id === 'guest' || !jState.journey) return;
+  try {
+    const { data, error } = await sb
+      .from('checklists')
+      .select('items')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    
+    if (error || !data?.items?.completedSteps) return;
+    
+    // Restore completed steps
+    jState.completed = new Set(data.items.completedSteps);
+    if (data.items.score) jState.score = data.items.score;
+  } catch(e) {
+    console.warn('Progress load error:', e);
+  }
+}
+
 // ── Dashboard ──
-function jBuildDashboard() {
+async function jBuildDashboard() {
   const j = jState.journey;
   const i = jState.intake;
   const effectiveIndustry = i.industry === 'Other' && i.industryOther ? i.industryOther : i.industry;
@@ -7233,6 +7380,16 @@ function jBuildDashboard() {
 
   const container = document.getElementById('j-phases-container');
   container.innerHTML = j.phases.map(p => jRenderPhase(p)).join('');
+  
+  // FIX 5: Load saved progress
+  await jLoadProgress();
+  
+  // FIX 3: Render agency breakdown
+  jRenderAgencyBreakdown();
+  
+  // FIX 4: Render deadline tracker
+  jRenderDeadlineTracker();
+  
   jUpdateScore(0);
   jUpdateStepCount();
   jUpdateVaultCount();
@@ -7247,6 +7404,142 @@ function jRenderPhase(phase) {
         <div class="j-phase-progress" id="j-pp-${phase.id}">0 / ${phase.steps.length}</div>
       </div>
       <div class="j-step-grid">${phase.steps.map(s => jRenderStepCard(s)).join('')}</div>
+    </div>`;
+}
+
+// FIX 3: Agency breakdown visualization
+function jRenderAgencyBreakdown() {
+  const breakdownEl = document.getElementById('j-agency-breakdown');
+  if (!breakdownEl || !jState.journey) return;
+  
+  // Calculate scores by agency
+  const agencyScores = {};
+  const agencyTotals = {};
+  
+  for (const phase of jState.journey.phases) {
+    for (const step of phase.steps) {
+      const agency = step.agency;
+      if (!agencyScores[agency]) agencyScores[agency] = 0;
+      if (!agencyTotals[agency]) agencyTotals[agency] = 0;
+      
+      agencyTotals[agency] += step.weight;
+      if (jState.completed.has(step.id)) agencyScores[agency] += step.weight;
+    }
+  }
+  
+  const sortedAgencies = Object.keys(agencyScores).sort((a, b) => agencyTotals[b] - agencyTotals[a]);
+  
+  const colorMap = { CAC:'#60A5FA', FIRS:'#FCD34D', CBN:'#C4B5FD', NITDA:'#67E8F9',
+    NAFDAC:'#FCA5A5', NSITF:'#6EE7B7', SEC:'#F9A8D4', SON:'#FED7AA',
+    PENCOM:'#A3E635', NHF:'#FB923C', STATE:'#CBD5E1' };
+  
+  breakdownEl.innerHTML = `
+    <div style="padding:16px;background:var(--j-bg-h);border-radius:var(--j-r);border:1px solid var(--j-border)">
+      <div style="font-size:13px;font-weight:700;color:var(--j-sub);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Compliance by Agency</div>
+      ${sortedAgencies.map(agency => {
+        const completed = agencyScores[agency];
+        const total = agencyTotals[agency];
+        const pct = Math.round((completed / Math.max(total, 1)) * 100);
+        return `
+          <div style="margin-bottom:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+              <div style="font-size:13px;font-weight:600;color:var(--j-text)">${agency}</div>
+              <div style="font-size:12px;color:var(--j-sub)">${completed} / ${total} pts</div>
+            </div>
+            <div style="height:6px;background:var(--j-bg-s);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${colorMap[agency]||'var(--j-green)'};transition:width 0.3s ease"></div>
+            </div>
+            <div style="font-size:11px;color:var(--j-sub);margin-top:2px">${pct}%</div>
+          </div>
+        `;
+      }).join('')}
+    </div>`;
+}
+
+// FIX 4: Deadline tracker (based on incorporation date + entity type)
+function jRenderDeadlineTracker() {
+  const trackerEl = document.getElementById('j-deadline-tracker');
+  if (!trackerEl || !jState.journey) return;
+  
+  // Estimate incorporation date from intake (or use today if not CAC registered yet)
+  let incorporationDate = new Date();
+  if (jState.intake.incorporationDate) {
+    incorporationDate = new Date(jState.intake.incorporationDate);
+  } else if (jState.intake.cacTimeline === 'Already registered') {
+    // If already registered, assume recent (within 3 months)
+    incorporationDate = new Date(Date.now() - 30*24*60*60*1000);
+  }
+  
+  // Key compliance deadlines by entity type & agency
+  const deadlines = [];
+  
+  // CAC: Annual returns (42 days after AGM, typically annually)
+  const annualReturnDue = new Date(incorporationDate);
+  annualReturnDue.setFullYear(annualReturnDue.getFullYear() + 1);
+  annualReturnDue.setDate(annualReturnDue.getDate() + 42);
+  
+  deadlines.push({
+    agency: 'CAC',
+    title: 'Annual Returns Filing',
+    dueDate: annualReturnDue,
+    priority: 'high',
+    description: 'File annual returns within 42 days of AGM'
+  });
+  
+  // FIRS: Tax return (3 months after year-end)
+  const taxReturnDue = new Date(incorporationDate);
+  taxReturnDue.setFullYear(taxReturnDue.getFullYear() + 1);
+  taxReturnDue.setMonth(2); // March
+  deadlines.push({
+    agency: 'FIRS',
+    title: 'Company Income Tax Return',
+    dueDate: taxReturnDue,
+    priority: 'critical',
+    description: 'File CIT within 3 months of year-end'
+  });
+  
+  // NITDA: If personal data collected, annual audit
+  if (jState.intake.collectsPersonalData && jState.intake.collectsPersonalData !== 'No') {
+    const ndprAuditDue = new Date(incorporationDate);
+    ndprAuditDue.setFullYear(ndprAuditDue.getFullYear() + 1);
+    deadlines.push({
+      agency: 'NITDA',
+      title: 'NDPR Annual Compliance Audit',
+      dueDate: ndprAuditDue,
+      priority: 'high',
+      description: 'Annual audit for organizations processing personal data'
+    });
+  }
+  
+  // Sort by due date
+  deadlines.sort((a, b) => a.dueDate - b.dueDate);
+  
+  const colorMap = { CAC:'#60A5FA', FIRS:'#FCD34D', NITDA:'#67E8F9', critical:'#F87171', high:'#F59E0B' };
+  const today = new Date();
+  
+  trackerEl.innerHTML = `
+    <div style="padding:16px;background:var(--j-bg-h);border-radius:var(--j-r);border:1px solid var(--j-border)">
+      <div style="font-size:13px;font-weight:700;color:var(--j-sub);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Upcoming Deadlines</div>
+      ${deadlines.map(d => {
+        const daysUntil = Math.ceil((d.dueDate - today) / (1000*60*60*24));
+        const overdue = daysUntil < 0;
+        const urgent = daysUntil < 30 && daysUntil >= 0;
+        const dateStr = d.dueDate.toLocaleDateString('en-NG', { day:'numeric', month:'short', year:'numeric' });
+        return `
+          <div style="margin-bottom:10px;padding:10px;background:var(--j-bg-s);border-radius:6px;border-left:3px solid ${colorMap[d.agency]||'#666'}${overdue ? ';opacity:0.6;text-decoration:line-through' : ''}">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:11px;font-weight:700;background:${colorMap[d.agency]||'#666'};color:white;padding:2px 6px;border-radius:3px">${d.agency}</span>
+                <div style="font-size:13px;font-weight:600;color:var(--j-text)">${d.title}</div>
+              </div>
+              ${overdue ? '<span style="font-size:11px;color:#CC1F1F;font-weight:700">OVERDUE</span>' : 
+                urgent ? `<span style="font-size:11px;color:#F59E0B;font-weight:700">🔔 ${daysUntil} days</span>` :
+                '<span style="font-size:11px;color:var(--j-sub)">' + dateStr + '</span>'}
+            </div>
+            <div style="font-size:12px;color:var(--j-sub)">${d.description}</div>
+          </div>
+        `;
+      }).join('')}
     </div>`;
 }
 
@@ -7343,6 +7636,43 @@ function jGetAgencyColor(agency) {
   return map[agency] || '#00D97E';
 }
 
+// FIX 5: Persist step completion to Supabase
+async function jSaveProgress() {
+  if (!currentUser || currentUser.id === 'guest' || !jState.journey) return;
+  try {
+    // Serialize completed steps
+    const completedArray = Array.from(jState.completed);
+    const progressData = {
+      user_id: currentUser.id,
+      ...(currentOrg ? { org_id: currentOrg.id } : {}),
+      business_name: jState.intake.businessName,
+      entity_type: jState.intake.entityType,
+      industry: jState.intake.industry === 'Other' && jState.intake.industryOther 
+        ? jState.intake.industryOther 
+        : jState.intake.industry,
+      state: jState.intake.state,
+      completed_steps: completedArray,
+      current_score: jState.score,
+      journey_summary: jState.journey.summary,
+      updated_at: new Date().toISOString()
+    };
+    
+    // Save to checklists table (reuse existing table with journey context)
+    await sb.from('checklists').upsert({
+      user_id: currentUser.id,
+      ...(currentOrg ? { org_id: currentOrg.id } : {}),
+      business_name: progressData.business_name,
+      business_type: progressData.entity_type,
+      industry: progressData.industry,
+      stage: progressData.state,
+      items: { journey: jState.journey, completedSteps: completedArray, score: jState.score },
+      created_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+  } catch(e) {
+    console.warn('Progress save error:', e);
+  }
+}
+
 // ── Score ──
 function jToggleStep(id) {
   if (jState.completed.has(id)) jState.completed.delete(id);
@@ -7350,6 +7680,7 @@ function jToggleStep(id) {
   jRefreshCard(id);
   jRecalcScore();
   jUpdateStepCount();
+  jSaveProgress(); // FIX 5: Persist to Supabase
 }
 
 function jMarkStepComplete() {
@@ -7359,6 +7690,7 @@ function jMarkStepComplete() {
   jRefreshCard(id);
   jRecalcScore();
   jUpdateStepCount();
+  jSaveProgress(); // FIX 5: Persist to Supabase
   const btn = document.getElementById('j-btn-mark-complete');
   btn.textContent = '✓ Marked as Complete';
   btn.className = 'j-btn-complete done';
