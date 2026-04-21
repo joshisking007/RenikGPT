@@ -4428,7 +4428,10 @@ async function doSignup() {
   clearAuthMessages();
   const { data, error } = await sb.auth.signUp({
     email, password: pass,
-    options: { data: { full_name: name, company } }
+    options: {
+      data: { full_name: name, company },
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
   });
   if (error) {
     authBtnReset('signup-btn', 'Create account');
