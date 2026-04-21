@@ -6713,6 +6713,20 @@ const J_QUESTION_DEFS = [
   // 7
   () => ({ id:'state', text:'Which state will your business primarily operate from?',
     type:'options-scroll', key:'state', required:true, module:'A', options:NG_STATES }),
+  
+  // ┌─ NEW QUESTIONS: Business Structure & Timeline ─────────────┐
+  // 7b — Business structure (partnership, sole trader, etc.)
+  () => ({ id:'businessStructure', text:'What is your business structure?',
+    type:'options', key:'businessStructure', required:false, module:'A',
+    options:['Sole Proprietor','Partnership (2–3 partners)','Limited Liability Company (LLC)','Public Company','NGO / Non-profit','Cooperative','Not sure yet'] }),
+  // 7c — Incorporation date (for accurate deadline calculation)
+  () => ({ id:'incorporationDate', text:'When was or will your business be registered with CAC?',
+    type:'text', placeholder:'e.g. 15-Jan-2024 or "Planning to register in 3 months"', 
+    key:'incorporationDate', required:false, module:'A' }),
+  // 7d — Years in operation
+  () => ({ id:'yearsInOperation', text:'How long has your business been operating?',
+    type:'options', key:'yearsInOperation', required:false, module:'A',
+    options:['Less than 1 month','1–3 months','3–12 months','1–2 years','2–5 years','5+ years','Not yet started'] }),
 
   // ─── MODULE B: SCALE & FINANCE ────────────────────────
   // 8
@@ -6780,6 +6794,28 @@ const J_QUESTION_DEFS = [
         type:'text', placeholder:'e.g. NAFDAC registration, CBN licence…',
         key:'existingLicencesDetail', required:false, module:'C' }
     : null,
+  
+  // ┌─ NEW QUESTIONS: Compliance Readiness & Expansion ─────────┐
+  // 21 — Any previous regulatory warnings/violations
+  () => ({ id:'regulatoryHistory', text:'Has your business received any regulatory warnings, violations, or rejections?',
+    type:'options', key:'regulatoryHistory', required:false, module:'C',
+    options:['No — clean record','Yes — minor warning','Yes — significant violation','Yes — but resolved','Not sure'] }),
+  // 22 — Expansion/growth plans
+  () => ({ id:'expansionPlans', text:'Are you planning to expand your business in the next 12 months?',
+    type:'options', key:'expansionPlans', required:false, module:'C',
+    options:['Yes — new products/services','Yes — new locations/states','Yes — significant hiring','No plans','Reviewing options'] }),
+  // 23 — Industry certifications/memberships
+  () => ({ id:'professionalCertifications', text:'Do you have professional certifications or industry memberships?',
+    type:'options', key:'professionalCertifications', required:false, module:'C',
+    options:['Yes — professional body membership (e.g. ICAN, NBA)','Yes — quality/ISO certification','Yes — both','No'] }),
+  // 24 — Current compliance readiness
+  () => ({ id:'complianceReadiness', text:'How would you rate your current compliance readiness?',
+    type:'options', key:'complianceReadiness', required:false, module:'C',
+    options:['Very prepared — documented systems in place','Moderately prepared — some compliance in place','Minimal — just started','Not sure — need expert guidance'] }),
+  // 25 — Specific pain points
+  () => ({ id:'compliancePainPoints', text:'What is your biggest compliance concern right now? (optional)',
+    type:'text', placeholder:'e.g. "Unsure about NDPR requirements", "Don\'t know if we need NAFDAC"…',
+    key:'compliancePainPoints', required:false, module:'C' }),
 ];
 
 // ── Module D upload slots ──
@@ -6819,11 +6855,16 @@ function jInitIntake() {
 function jStartIntake() {
   jCurrentQ = 0;
   jState.intake = {
+    // Module A — Identity
     businessName:'', cacRegistered:'', cacTimeline:'', incorporationDate:'',
     entityType:'', industry:'', industryOther:'', state:'', rcNumber:'',
+    businessStructure:'', yearsInOperation:'', // NEW
+    // Module B — Scale
     turnover:'', hasEmployees:'', employeeCount:'', hiringTimeline:'', hasTIN:'', hasVAT:'',
+    // Module C — Operations
     processesPayments:'', collectsPersonalData:'', importsExports:'', sellsFood:'',
     hasPhysicalPremises:'', financialSector:'', hasExistingLicences:'', existingLicencesDetail:'',
+    regulatoryHistory:'', expansionPlans:'', professionalCertifications:'', complianceReadiness:'', compliancePainPoints:'', // NEW
   };
   jState.journey = null; jState.completed = new Set(); jState.score = 0; jState.activeStep = null;
   jModuleDUploads = {};
@@ -7282,8 +7323,11 @@ MODULE A — IDENTITY
 - Business Name: ${i.businessName}
 - CAC Status: ${i.cacRegistered}${i.cacTimeline ? ` — plans to register: ${i.cacTimeline}` : ''}${i.rcNumber ? ` — RC Number: ${i.rcNumber}` : ''}
 - Entity Type: ${i.entityType}
+- Business Structure: ${i.businessStructure || 'Not specified'}
 - Industry: ${effectiveIndustry}
 - Operating State: ${i.state}
+- Years in Operation: ${i.yearsInOperation || 'Not specified'}
+- Incorporation Date: ${i.incorporationDate || 'Not specified'}
 
 MODULE B — SCALE & FINANCE
 - Annual Turnover: ${i.turnover}
@@ -7299,6 +7343,11 @@ MODULE C — OPERATIONS
 - Physical Premises: ${i.hasPhysicalPremises}
 - Financial Sector: ${i.financialSector}
 - Existing Licences: ${i.hasExistingLicences}${i.existingLicencesDetail ? `: ${i.existingLicencesDetail}` : ''}
+- Regulatory History: ${i.regulatoryHistory || 'Not specified'}
+- Expansion Plans: ${i.expansionPlans || 'Not specified'}
+- Professional Certifications: ${i.professionalCertifications || 'Not specified'}
+- Current Compliance Readiness: ${i.complianceReadiness || 'Not specified'}
+- Specific Pain Points: ${i.compliancePainPoints || 'None mentioned'}
 
 MODULE D — DOCUMENTS UPLOADED
 ${uploadedDocs.length ? uploadedDocs.map(d => `- ${d}`).join('\n') : '- None uploaded yet'}
@@ -7835,6 +7884,22 @@ Rules:
 async function jGenerateForm(step) {
   const i = jState.intake;
   const effectiveIndustry = i.industry === 'Other' && i.industryOther ? i.industryOther : i.industry;
+  
+  // FIX 6: Include scanned document data for better pre-fills
+  const scannedDataContext = Object.entries(jModuleDUploads)
+    .filter(([_, upload]) => upload.scanned && upload.data)
+    .map(([slotId, upload]) => {
+      const data = upload.data;
+      const parts = [];
+      if (data.businessName) parts.push(`Business Name: ${data.businessName}`);
+      if (data.rcNumber) parts.push(`RC Number: ${data.rcNumber}`);
+      if (data.registrationDate) parts.push(`Registration Date: ${data.registrationDate}`);
+      if (data.tin) parts.push(`TIN: ${data.tin}`);
+      if (data.idNumber) parts.push(`ID Number: ${data.idNumber}`);
+      return parts.join('; ');
+    })
+    .filter(Boolean);
+  
   const userMsg = `Business: ${i.businessName}
 Entity: ${i.entityType}
 Industry: ${effectiveIndustry}
@@ -7845,6 +7910,7 @@ VAT: ${i.hasVAT}
 Employees: ${i.hasEmployees === 'Yes' ? i.employeeCount : 'None'}
 Payments: ${i.processesPayments}
 Personal Data: ${i.collectsPersonalData}
+${scannedDataContext.length ? `\nSCANNED FROM DOCUMENTS:\n${scannedDataContext.join('\n')}` : ''}
 
 Generate the pre-filled form for: ${step.title} (${step.agencyFull})
 Form should cover all fields required to: ${step.description}`;
@@ -7877,25 +7943,52 @@ function jRenderForm(formData, step) {
   document.getElementById('j-form-body').innerHTML = notice + html;
 }
 
+// FIX 6: Extract pre-fill value from scanned documents
+function jGetScannedValue(fieldKey) {
+  const mappings = {
+    'business_name': () => jModuleDUploads['cac_cert']?.data?.businessName,
+    'rc_number': () => jModuleDUploads['cac_cert']?.data?.rcNumber,
+    'registration_date': () => jModuleDUploads['cac_cert']?.data?.registrationDate,
+    'tin': () => jModuleDUploads['tin_cert']?.data?.tin,
+    'tin_number': () => jModuleDUploads['tin_cert']?.data?.tin,
+    'director_id': () => jModuleDUploads['director_id']?.data?.idNumber,
+    'director_name': () => jModuleDUploads['director_id']?.data?.holderName,
+    'owner_name': () => jModuleDUploads['director_id']?.data?.holderName,
+  };
+  return mappings[fieldKey?.toLowerCase()]?.() || null;
+}
+
 function jRenderField(f) {
   const full = f.type === 'textarea' ? 'full' : '';
+  
+  // FIX 6: Check for scanned value
+  const scannedValue = jGetScannedValue(f.key);
+  const displayValue = f.value || scannedValue || '';
+  const fromScanned = scannedValue && !f.value;
+  const indicator = fromScanned ? ' 📄' : '';
+  
   if (f.type === 'select') return `<div class="j-form-field ${full}">
-    <label class="j-form-label">${f.label}</label>
-    <select class="j-form-input" id="jff-${f.key}">
+    <label class="j-form-label">${f.label}${indicator}</label>
+    <select class="j-form-input" id="jff-${f.key}"${fromScanned ? ' style="border-color:var(--j-green);background:var(--j-green-dim)"' : ''}>
       <option value="">Select…</option>
-      ${(f.options||[]).map(o => `<option value="${o}"${f.value===o?' selected':''}>${o}</option>`).join('')}
+      ${(f.options||[]).map(o => `<option value="${o}"${displayValue===o?' selected':''}>${o}</option>`).join('')}
     </select>
     ${f.hint ? `<div class="j-form-hint">${f.hint}</div>` : ''}
+    ${fromScanned ? `<div class="j-form-hint" style="color:var(--j-green);font-weight:500">✓ Auto-filled from scanned document</div>` : ''}
   </div>`;
+  
   if (f.type === 'textarea') return `<div class="j-form-field ${full}">
-    <label class="j-form-label">${f.label}</label>
-    <textarea class="j-form-input" id="jff-${f.key}" rows="3">${f.value||''}</textarea>
+    <label class="j-form-label">${f.label}${indicator}</label>
+    <textarea class="j-form-input" id="jff-${f.key}" rows="3"${fromScanned ? ' style="border-color:var(--j-green);background:var(--j-green-dim)"' : ''}>${displayValue}</textarea>
     ${f.hint ? `<div class="j-form-hint">${f.hint}</div>` : ''}
+    ${fromScanned ? `<div class="j-form-hint" style="color:var(--j-green);font-weight:500">✓ Auto-filled from scanned document</div>` : ''}
   </div>`;
+  
   return `<div class="j-form-field ${full}">
-    <label class="j-form-label">${f.label}</label>
-    <input class="j-form-input" id="jff-${f.key}" type="text" value="${f.value||''}" placeholder="">
+    <label class="j-form-label">${f.label}${indicator}</label>
+    <input class="j-form-input" id="jff-${f.key}" type="text" value="${displayValue}" placeholder=""${fromScanned ? ' style="border-color:var(--j-green);background:var(--j-green-dim)"' : ''}>
     ${f.hint ? `<div class="j-form-hint">${f.hint}</div>` : ''}
+    ${fromScanned ? `<div class="j-form-hint" style="color:var(--j-green);font-weight:500">✓ Auto-filled from scanned document</div>` : ''}
   </div>`;
 }
 
