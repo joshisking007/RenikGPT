@@ -3684,7 +3684,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       <div class="rmb-cards-grid">
         <div class="rmb-card" onclick="rmbSelectEntity('bn', this)">
           <div class="rmb-card-badge">BN</div>
-          <div class="rmb-card-title">Sole Proprietorship/Partnership</div>
+          <div class="rmb-card-title">Business Name</div>
           <div class="rmb-card-desc">Sole proprietorship or partnership. Simplest and cheapest. Owner is personally liable.</div>
           <div class="rmb-card-meta">
             <span>₦10,000 – ₦15,000</span><span>5–7 days</span>
@@ -5492,38 +5492,44 @@ async function generateChecklist() {
   output.style.display = 'flex';
   output.innerHTML = '<div class="loading-row"><div class="spinner"></div> RenikGPT is building your checklist…</div>';
   try {
-    const prompt = `Generate a comprehensive Nigerian regulatory compliance checklist for:
+    const prompt = `Generate a Nigerian regulatory compliance checklist for:
 - Business: ${bizName||'Unnamed Business'}
 - Type: ${bizType}
 - Industry: ${industry}
 - Stage: ${stage}
 - Annual Turnover: ${turnover||'Unknown'}
 
-Return ONLY valid JSON (no markdown, no backticks) in this format:
-{
-  "sections": [
-    {
-      "agency": "CAC",
-      "title": "Company Registration & Corporate Compliance",
-      "items": [
-        { "text": "Register your business name with CAC", "ref": "CAMA 2020 §18", "priority": "critical" },
-        ...
-      ]
-    },
-    ...
-  ]
-}
+Return ONLY valid JSON. No markdown, no backticks, no explanation. Exactly this structure:
+{"sections":[{"agency":"CAC","title":"Company Registration","items":[{"text":"Register with CAC","ref":"CAMA 2020 §18","priority":"critical"}]}]}
 
-Include sections for all relevant agencies (CAC, FIRS, CBN if fintech, NITDA if collecting data, SEC if fundraising, NAFDAC if food/pharma). Each section should have 3-6 actionable items. Priority must be: critical, high, or medium.`;
+Rules:
+- Include only relevant agencies: CAC always; FIRS always; CBN only if fintech/banking; NITDA only if collecting user data; SEC only if fundraising; NAFDAC only if food/pharma/health.
+- Each section: exactly 3 items max.
+- priority values: critical, high, or medium only.
+- Keep item text under 80 characters.
+- The JSON must be complete and valid — close all brackets.`;
     const data = await callAI({
         model:'claude-sonnet-4-6',
-        max_tokens:1500,
-        system:'You are a Nigerian compliance expert. Always respond with strict JSON only. No markdown. No backticks. No preamble.',
+        max_tokens:2048,
+        system:'You are a Nigerian compliance expert. Respond with strict JSON only. No markdown. No backticks. No preamble. No explanation. Always close all JSON brackets.',
         messages:[{ role:'user', content:prompt }]
       });
     let raw = data.content?.[0]?.text || '{}';
     raw = raw.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(raw);
+    // Repair truncated JSON: trim to last complete item then close open brackets
+    let parsed;
+    try { parsed = JSON.parse(raw); } catch(_) {
+      let opens = 0, openCurly = 0;
+      for (const ch of raw) {
+        if (ch==='[') opens++; else if (ch===']') opens--;
+        if (ch==='{') openCurly++; else if (ch==='}') openCurly--;
+      }
+      const lastBrace = raw.lastIndexOf('}');
+      if (lastBrace > 0) raw = raw.slice(0, lastBrace + 1);
+      for (let i = 0; i < Math.max(0, opens); i++) raw += ']';
+      for (let i = 0; i < Math.max(0, openCurly); i++) raw += '}';
+      parsed = JSON.parse(raw);
+    }
     renderChecklist(parsed, bizName, bizType, industry, stage, turnover);
     btn.disabled = false; btn.textContent = 'Regenerate Checklist →';
   } catch(e) {
