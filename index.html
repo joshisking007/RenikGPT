@@ -8,10 +8,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <!--
-=============================================================
+
   RENIKGPT — SUPABASE SETUP
   Run this SQL in your Supabase SQL Editor before using the app.
-=============================================================
+
 
 create table if not exists regulations (
   id uuid default gen_random_uuid() primary key,
@@ -127,7 +127,6 @@ insert into reg_alerts (agency,title,description,severity,published_at) values
 ('CAC','New Online Registration Portal','CAC has launched a new digital portal. All new incorporations must use the updated system from March 2025.','info',now()-interval '10 days'),
 ('NITDA','NDPR Amendment Draft Released','NITDA has released a draft amendment to the NDPR for public consultation. Comments accepted until end of Q1 2025.','medium',now()-interval '14 days');
 
-=============================================================
 
 -- ── MULTI-USER / TEAM ACCOUNTS ──────────────────────────────
 -- Run this ADDITIONAL SQL in Supabase SQL Editor
@@ -198,7 +197,7 @@ create policy "Users or org members access docs"
     ))
   );
 
-=============================================================
+
 -->
 
 <style>
@@ -212,13 +211,11 @@ create policy "Users or org members access docs"
   --border: rgba(20,20,10,0.08);
   --border-em: rgba(20,20,10,0.15);
 
-  /* Primary accent: deep amber/ochre — distinctive, B2B, Nigerian flag-adjacent */
   --green: #C47B1A;
   --green-dim: rgba(196,123,26,0.10);
   --green-glow: rgba(196,123,26,0.20);
   --gold: #9A5F0F;
   --gold-dim: rgba(154,95,15,0.10);
-  /* Keep --red as the "critical/danger" semantic color */
   --red: #B83232;
   --red-dim: rgba(184,50,50,0.08);
   --blue: #1A3A6B;
@@ -238,10 +235,8 @@ create policy "Users or org members access docs"
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); overflow: hidden; }
 #app { display: flex; height: 100vh; height: 100dvh; }
 
-/* ── MOBILE NAV — removed; hamburger handles navigation ── */
 #mobile-nav { display: none !important; }
 
-/* ── MOBILE DRAWER ── */
 #sidebar-backdrop {
   display: none; position: fixed; inset: 0; z-index: 80;
   background: rgba(0,0,0,0.4);
@@ -251,7 +246,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   transform: translateX(0) !important;
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   #sidebar {
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 90;
@@ -295,7 +289,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   /* Show hamburger in ALL view headers on mobile */
   .view-header .chat-header-menu { display: flex !important; }
 
-  /* ── UNIVERSAL VIEW FIT: every view fills the screen exactly ── */
   #app { height: 100dvh; overflow: hidden; }
   #main { height: 100dvh; overflow: hidden; flex-direction: column; }
 
@@ -382,7 +375,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   #mobile-sessions-btn { display: none !important; }
 }
 
-/* ── CHAT HEADER ACTION BUTTONS ── */
 #chat-header-actions {
   display: flex; align-items: center; gap: 6px; margin-left: auto;
 }
@@ -397,7 +389,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   display: none; /* shown via media query above */
 }
 
-/* ── CHAT SEARCH BAR ── */
 #chat-search-bar {
   display: none; padding: 8px 16px; border-bottom: 1px solid var(--border);
   background: var(--bg-surface); flex-shrink: 0;
@@ -418,7 +409,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .msg.search-highlight .bubble { outline: 2px solid var(--red); outline-offset: 2px; }
 #search-match-count { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
-/* ── AUTH ── */
 #auth-overlay {
   position: fixed; inset: 0; z-index: 10000;
   background: rgba(10,10,10,0.72);
@@ -447,7 +437,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 @keyframes authSlideUp { from { transform: translateY(24px); opacity:0 } to { transform: translateY(0); opacity:1 } }
 
-/* Header strip */
 .auth-header {
   background: #111111;
   padding: 28px 36px 24px;
@@ -469,10 +458,8 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   border: 1px solid rgba(255,255,255,0.10);
 }
 
-/* Body padding */
 .auth-body { padding: 28px 36px 30px; }
 
-/* Tabs */
 .auth-tabs {
   display: flex; gap: 0; margin-bottom: 24px;
   border: 1px solid var(--border-em); border-radius: var(--r); overflow: hidden;
@@ -487,7 +474,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .auth-tab.active { background: #111111; color: #FFFFFF; }
 .auth-tab:hover:not(.active) { background: var(--bg-hover); color: var(--text); }
 
-/* Google OAuth button */
 .auth-google-btn {
   width: 100%; padding: 12px 16px; background: #FFFFFF;
   border: 1.5px solid var(--border-em); border-radius: var(--r);
@@ -499,14 +485,12 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .auth-google-btn:disabled { opacity: 0.5; cursor: default; }
 .auth-google-icon { width: 18px; height: 18px; flex-shrink: 0; }
 
-/* Divider */
 .auth-divider {
   display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
 }
 .auth-divider-line { flex: 1; height: 1px; background: var(--border); }
 .auth-divider-text { font-size: 12px; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
 
-/* Fields */
 .auth-field { margin-bottom: 14px; }
 .auth-field label {
   display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
@@ -520,7 +504,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .auth-field input:focus { outline: none; border-color: #111111; box-shadow: 0 0 0 3px rgba(17,17,17,0.07); }
 
-/* Primary action button */
 .auth-btn {
   width: 100%; padding: 13px; background: #111111; color: #FFFFFF;
   border: none; border-radius: var(--r); font-family: var(--font);
@@ -534,7 +517,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .auth-btn:active:not(:disabled) { transform: scale(0.99); }
 .auth-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* Spinner inside button */
 .auth-btn-spinner {
   width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3);
   border-top-color: #FFFFFF; border-radius: 50%;
@@ -544,7 +526,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .auth-btn.loading .auth-btn-label { opacity: 0.7; }
 @keyframes btnSpin { to { transform: rotate(360deg) } }
 
-/* Error / success messages */
 .auth-error {
   font-size: 12.5px; color: var(--red); margin-top: 12px;
   padding: 10px 14px; background: var(--red-dim); border-radius: 8px;
@@ -558,7 +539,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .auth-success-msg.visible { display: block; }
 
-/* ── CONFIRMATION SCREEN ── */
 #auth-confirm-screen {
   display: none; flex-direction: column; align-items: center;
   padding: 44px 36px 40px; text-align: center;
@@ -702,11 +682,9 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 
 #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-/* ── VIEWS ── */
 .view { display: none; flex: 1; overflow: hidden; flex-direction: column; }
 .view.active { display: flex; }
 
-/* ── CHAT SESSION SIDEBAR ── */
 #chat-sessions-panel {
   width: 200px; flex-shrink: 0; border-right: 1px solid var(--border);
   background: var(--bg-surface); display: flex; flex-direction: column;
@@ -778,7 +756,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   min-width: 0;
 }
 
-/* ── CHAT ── */
 #view-chat { flex-direction: column; }
 #chat-header {
   padding: 14px 20px; border-bottom: 1px solid var(--border);
@@ -986,7 +963,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .chat-header-menu:hover { background: var(--bg-hover); }
 
-/* ── REGULATIONS DB ── */
 #view-regulations { flex-direction: column; }
 .view-header {
   padding: 18px 24px 14px; border-bottom: 1px solid var(--border);
@@ -1057,7 +1033,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .ask-ai-btn:hover { background: rgba(204,31,31,0.15); }
 
-/* ── PDF UPLOAD ── */
 #view-upload { flex-direction: column; }
 .upload-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -1121,7 +1096,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .history-name { font-size: 14px; color: var(--text); font-weight: 500; }
 .history-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
-/* ── CHECKLIST ── */
 #view-checklist { flex-direction: column; }
 .checklist-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
 .checklist-body::-webkit-scrollbar { width: 4px; }
@@ -1198,7 +1172,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font);
 }
 
-/* ── ALERTS ── */
 #view-alerts { flex-direction: column; }
 .alerts-body { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px; }
 .alert-card {
@@ -1242,7 +1215,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .sub-toggle::after { content:''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; }
 .sub-toggle.on::after { left: 21px; }
 
-/* ── LOADING ── */
 .spinner {
   width: 20px; height: 20px; border-radius: 50%;
   border: 2px solid var(--border-em); border-top-color: var(--red);
@@ -1258,7 +1230,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 8px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.12);
 }
-/* ── WELCOME MODAL ── */
 #welcome-overlay {
   display: none; position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
@@ -1318,7 +1289,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .wm-next:hover { opacity:0.88; }
 
-/* ── LAWYER CONNECT ── */
 .lawyer-card {
   background:#FFFFFF; border:1px solid var(--border);
   border-radius:var(--r-lg); padding:18px;
@@ -1355,7 +1325,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .lc-btn-sec:hover { background:var(--bg-hover); }
 
-/* ── LAWYER MODAL ── */
 #lawyer-modal {
   display:none; position:fixed; inset:0; z-index:200;
   background:rgba(0,0,0,0.45); align-items:center; justify-content:center;
@@ -1380,7 +1349,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .lm-field input:focus, .lm-field textarea:focus, .lm-field select:focus { outline:none; border-color:var(--red); }
 .lm-actions { display:flex; gap:8px; margin-top:6px; }
 
-/* ── PRICING ── */
 .price-card {
   background:#fff; border:1px solid var(--border);
   border-radius:var(--r-lg); padding:22px;
@@ -1422,7 +1390,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .rc-btn:hover { background:rgba(204,31,31,0.15); }
 
-/* ── DEADLINES ── */
 .deadline-card {
   background:#fff; border:1px solid var(--border);
   border-radius:var(--r-lg); padding:16px 20px;
@@ -1443,7 +1410,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .dl-detail { font-size:12.5px; color:var(--text-sub); margin-top:3px; }
 .dl-date { font-size:12px; color:var(--text-muted); margin-top:4px; font-family:var(--font-mono); }
 
-/* ── PRINT / PDF EXPORT ── */
 .export-btn {
   padding:8px 16px; background:var(--bg-surface); color:var(--text-sub);
   border:1px solid var(--border-em); border-radius:var(--r);
@@ -1464,7 +1430,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   .cl-section, .reg-card, .deadline-card { break-inside:avoid; }
 }
 
-/* ── PROFILE PILL (sidebar) ── */
 #profile-pill {
   display: none; margin: 8px 8px 0;
   padding: 10px 12px; border-radius: 10px;
@@ -1479,7 +1444,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .pp-industry { font-size: 11px; color: #166534; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pp-edit { font-size: 11px; color: #15803D; opacity: 0.7; flex-shrink: 0; }
 
-/* ── ONBOARDING WIZARD ── */
 #onboard-overlay {
   display: none; position: fixed; inset: 0; z-index: 300;
   background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
@@ -1522,7 +1486,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .ob-next:hover { opacity:0.88; }
 .ob-step-count { font-size:12px; color:var(--text-muted); }
 
-/* ── SAVED REPORTS VIEW ── */
 #view-reports { flex-direction: column; }
 .reports-grid { display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; flex: 1; overflow-y: auto; }
 .report-saved-card {
@@ -1547,7 +1510,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .reports-empty .re-title { font-size: 16px; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; }
 .reports-empty .re-sub { font-size: 13px; line-height: 1.6; }
 
-/* ── TEMPLATES STORE ── */
 #view-templates { flex-direction: column; }
 .templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; padding: 20px 24px; overflow-y: auto; align-content: start; }
 .tmpl-card {
@@ -1575,7 +1537,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .tb-text { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
 .tb-text strong { color: var(--text); }
 
-/* ── DOC-TO-CHECKLIST MAPPING (Feature 8) ── */
 #view-docmap { flex-direction: column; }
 .dcm-body {
   flex: 1; overflow-y: auto; padding: 16px 16px 24px;
@@ -1825,6 +1786,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 
 /* Journey screens — shown/hidden within the view */
 #view-journey .j-screen { display:none; flex-direction:column; position:absolute; inset:0; overflow:hidden; }
+#view-journey .j-screen.scrollable { overflow-y:auto; }
 #view-journey .j-screen.j-active { display:flex; }
 
 /* Noise overlay */
@@ -1833,9 +1795,8 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ── INTAKE ── */
-#view-journey #j-screen-intake { justify-content:center; align-items:center; background:var(--j-bg); z-index:1; }
-#view-journey .j-intake-wrap { width:100%; max-width:560px; padding:24px; position:relative; z-index:2; }
+#view-journey #j-screen-intake { justify-content:flex-start; align-items:center; background:var(--j-bg); z-index:1; overflow-y:auto; }
+#view-journey .j-intake-wrap { width:100%; max-width:560px; padding:40px 24px 60px; position:relative; z-index:2; }
 #view-journey .j-intake-logo { font-family:var(--j-font-d); font-size:15px; font-weight:600; letter-spacing:0.04em; color:var(--j-green); margin-bottom:48px; display:flex; align-items:center; gap:8px; }
 #view-journey .j-intake-logo span { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--j-green); box-shadow:0 0 12px var(--j-green); }
 #view-journey .j-q-progress { display:flex; gap:5px; margin-bottom:40px; }
@@ -1869,8 +1830,24 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-btn-next:disabled { opacity:.4; cursor:not-allowed; }
 #view-journey .j-btn-skip { background:transparent; border:1.5px solid var(--j-border-em); color:var(--j-sub); font-family:var(--j-font); font-size:14px; border-radius:var(--j-r); padding:13px 20px; cursor:pointer; transition:all .2s; }
 #view-journey .j-btn-skip:hover { color:var(--j-text); }
+@media (max-width:640px) {
+  #view-journey .j-intake-wrap { padding:24px 16px 80px; }
+  #view-journey .j-q-text { font-size:18px; margin-bottom:22px; }
+  #view-journey .j-q-options { grid-template-columns:1fr; }
+  #view-journey .j-q-options-scroll { grid-template-columns:1fr; max-height:none; }
+  #view-journey .j-q-actions { flex-wrap:wrap; }
+  #view-journey .j-btn-next, #view-journey .j-btn-prev, #view-journey .j-btn-skip { width:100%; text-align:center; justify-content:center; }
+  #view-journey #j-screen-dashboard { flex-direction:column; }
+  #view-journey #j-dash-sidebar { width:100%; flex-shrink:0; border-right:none; border-bottom:1px solid var(--j-border); max-height:220px; }
+  #view-journey .j-score-section { padding:12px 16px; flex-direction:row; gap:16px; }
+  #view-journey .j-score-ring-wrap { width:80px; height:80px; margin-bottom:0; flex-shrink:0; }
+  #view-journey .j-score-ring-wrap svg { width:80px; height:80px; }
+  #view-journey #j-score-value { font-size:22px; }
+  #view-journey .j-phase-nav { display:none; }
+  #view-journey .j-sidebar-top { padding:14px 16px; }
+  #view-journey .j-dash-body { padding:16px; }
+}
 
-/* ── GENERATING ── */
 #view-journey #j-screen-generating { justify-content:center; align-items:center; background:var(--j-bg); z-index:1; }
 #view-journey .j-gen-inner { text-align:center; max-width:400px; padding:24px; position:relative; z-index:2; }
 #view-journey .j-gen-ring { width:80px; height:80px; margin:0 auto 28px; }
@@ -1886,7 +1863,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-gen-step.active .j-gen-step-dot { background:var(--j-green); box-shadow:0 0 8px var(--j-green); animation:j-pulse 1s ease-in-out infinite; }
 @keyframes j-pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-/* ── DASHBOARD ── */
 #view-journey #j-screen-dashboard { flex-direction:row; z-index:1; }
 #view-journey #j-dash-sidebar { width:300px; flex-shrink:0; background:var(--j-bg-s); border-right:1px solid var(--j-border); display:flex; flex-direction:column; overflow:hidden; }
 #view-journey .j-sidebar-top { padding:24px 20px 20px; border-bottom:1px solid var(--j-border); }
@@ -1953,7 +1929,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-step-meta span { display:flex; align-items:center; gap:4px; }
 #view-journey .j-step-pts { margin-left:auto; font-family:var(--j-mono); font-size:11px; color:var(--j-green); font-weight:700; background:var(--j-green-dim); padding:2px 7px; border-radius:5px; }
 
-/* ── STEP DETAIL PANEL ── */
 #view-journey #j-panel-overlay { position:absolute; inset:0; background:rgba(0,0,0,.5); z-index:50; display:none; opacity:0; transition:opacity .3s; }
 #view-journey #j-panel-overlay.open { display:block; opacity:1; }
 #view-journey #j-step-panel { position:absolute; top:0; right:0; bottom:0; width:480px; background:var(--j-bg-s); border-left:1px solid var(--j-border); z-index:60; transform:translateX(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); overflow-y:auto; display:flex; flex-direction:column; }
@@ -1993,7 +1968,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-btn-complete:hover { border-color:var(--j-green); color:var(--j-green); }
 #view-journey .j-btn-complete.done { border-color:var(--j-green); color:var(--j-green); background:var(--j-green-dim); }
 
-/* ── FORM SCREEN ── */
 #view-journey #j-screen-form { flex-direction:column; overflow:hidden; background:var(--j-bg); z-index:1; }
 #view-journey .j-form-topbar { padding:16px 28px; border-bottom:1px solid var(--j-border); display:flex; align-items:center; gap:16px; flex-shrink:0; }
 #view-journey .j-form-back { background:var(--j-bg-s); border:1px solid var(--j-border); color:var(--j-sub); padding:8px 14px; border-radius:8px; cursor:pointer; font-family:var(--j-font); font-size:13px; transition:all .2s; display:flex; align-items:center; gap:6px; }
@@ -2056,7 +2030,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   #view-journey #j-vault-panel { width:100%; }
 }
 
-/* ── WELCOME SCREEN ── */
 #view-journey .j-welcome-badge { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--j-green); background:var(--j-green-dim); border:1px solid rgba(0,217,126,.2); padding:4px 10px; border-radius:20px; margin-bottom:16px; }
 #view-journey .j-welcome-title { font-family:var(--j-font-d); font-size:28px; font-weight:700; color:var(--j-text); line-height:1.25; margin-bottom:14px; }
 #view-journey .j-welcome-sub { font-size:15px; color:var(--j-sub); line-height:1.7; margin-bottom:28px; }
@@ -2070,10 +2043,8 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-welcome-note { font-size:12px; color:var(--j-muted); line-height:1.5; text-align:center; border-top:1px solid var(--j-border); padding-top:14px; }
 @media(max-width:640px) { #view-journey .j-welcome-docs-grid { grid-template-columns:1fr; } #view-journey .j-welcome-title { font-size:22px; } }
 
-/* ── MODULE LABEL ── */
 #view-journey .j-module-label { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--j-green); background:var(--j-green-dim); border:1px solid rgba(0,217,126,.15); display:inline-block; padding:3px 10px; border-radius:20px; margin-bottom:20px; }
 
-/* ── DOC UPLOAD GRID (Module D) ── */
 #view-journey .j-doc-upload-grid { display:flex; flex-direction:column; gap:10px; }
 #view-journey .j-doc-upload-row { display:flex; align-items:center; gap:12px; background:var(--j-bg-s); border:1.5px dashed var(--j-border-em); border-radius:var(--j-r); padding:14px 16px; cursor:pointer; transition:all .2s; }
 #view-journey .j-doc-upload-row:hover { border-color:var(--j-green); background:var(--j-green-dim); }
@@ -2083,7 +2054,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-doc-upload-row-sub { font-size:12px; color:var(--j-sub); margin-top:2px; }
 #view-journey .j-doc-upload-row-status { font-size:12px; font-weight:600; color:var(--j-green); flex-shrink:0; }
 
-/* ── STEP UPLOAD ZONE ── */
 #view-journey .j-step-upload-zone { border:1.5px dashed var(--j-border-em); border-radius:var(--j-r); padding:18px; text-align:center; cursor:pointer; transition:all .2s; margin-top:8px; }
 #view-journey .j-step-upload-zone:hover { border-color:var(--j-green); background:var(--j-green-dim); }
 #view-journey .j-step-upload-icon { font-size:22px; margin-bottom:6px; }
@@ -2095,6 +2065,286 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #view-journey .j-step-file-status { font-size:11px; color:var(--j-green); font-weight:700; flex-shrink:0; }
 #view-journey .j-step-file-remove { color:var(--j-muted); cursor:pointer; flex-shrink:0; font-size:14px; padding:0 2px; }
 #view-journey .j-step-file-remove:hover { color:var(--j-red); }
+
+/* ═══════════════════════════════════════════════════════
+   REGISTER MY BUSINESS — CAC Registration Wizard
+═══════════════════════════════════════════════════════ */
+#view-register {
+  flex-direction: column; height: 100%; overflow: hidden;
+  background: var(--bg);
+}
+
+.rmb-header {
+  padding: 18px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg-surface); flex-shrink: 0;
+}
+.rmb-header-text { flex: 1; min-width: 0; }
+.rmb-title { font-size: 17px; font-weight: 700; color: var(--text); }
+.rmb-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.rmb-steps-bar {
+  display: flex; align-items: center; gap: 0;
+  padding: 0 24px; border-bottom: 1px solid var(--border);
+  background: var(--bg-surface); flex-shrink: 0; overflow-x: auto;
+}
+.rmb-steps-bar::-webkit-scrollbar { display: none; }
+.rmb-step-pill {
+  display: flex; align-items: center; gap: 7px;
+  padding: 13px 16px; font-size: 12px; font-weight: 600;
+  color: var(--text-muted); white-space: nowrap; cursor: default;
+  border-bottom: 2px solid transparent; transition: all .2s;
+  flex-shrink: 0;
+}
+.rmb-step-pill.active { color: var(--red); border-bottom-color: var(--red); }
+.rmb-step-pill.done { color: var(--green); border-bottom-color: var(--green); }
+.rmb-step-num {
+  width: 20px; height: 20px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; font-size: 10px; font-weight: 800;
+  background: var(--bg-hover); color: var(--text-muted); flex-shrink: 0;
+  transition: all .2s;
+}
+.rmb-step-pill.active .rmb-step-num { background: var(--red); color: #fff; }
+.rmb-step-pill.done .rmb-step-num { background: var(--green); color: #fff; }
+.rmb-step-sep { color: var(--border-em); font-size: 16px; flex-shrink: 0; }
+
+.rmb-body {
+  flex: 1; overflow-y: auto; padding: 28px 24px;
+  max-width: 720px; width: 100%; margin: 0 auto;
+}
+.rmb-body::-webkit-scrollbar { width: 4px; }
+.rmb-body::-webkit-scrollbar-thumb { background: var(--border-em); border-radius: 2px; }
+
+.rmb-screen { display: none; flex-direction: column; gap: 20px; }
+.rmb-screen.active { display: flex; }
+
+.rmb-section-title {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.02em; margin-bottom: 4px;
+}
+.rmb-section-sub {
+  font-size: 13px; color: var(--text-sub); line-height: 1.6; margin-bottom: 4px;
+}
+
+.rmb-card {
+  background: var(--bg-surface); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px;
+  transition: border-color .2s, background .2s; cursor: pointer;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.rmb-card:hover { border-color: var(--border-em); background: var(--bg-hover); }
+.rmb-card.selected { border-color: var(--red); background: var(--red-dim); }
+.rmb-card-icon {
+  width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+  background: #fff; border: 1px solid var(--border-em);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; letter-spacing: .03em;
+  color: var(--text-sub); font-family: var(--font-mono);
+}
+.rmb-card.selected .rmb-card-icon { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+.rmb-card-body { flex: 1; min-width: 0; }
+.rmb-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.rmb-card-desc { font-size: 12px; color: var(--text-sub); line-height: 1.55; }
+.rmb-card-meta {
+  margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;
+}
+.rmb-card-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: .05em;
+  padding: 2px 8px; border-radius: 20px; text-transform: uppercase;
+  background: var(--bg-hover); color: var(--text-muted);
+  border: 1px solid var(--border-em);
+}
+.rmb-card.selected .rmb-card-tag { background: var(--red-dim); color: var(--red); border-color: rgba(184,50,50,.2); }
+
+.rmb-field-group { display: flex; flex-direction: column; gap: 14px; }
+.rmb-field { display: flex; flex-direction: column; gap: 5px; }
+.rmb-field label {
+  font-size: 11px; font-weight: 700; color: var(--text-sub);
+  text-transform: uppercase; letter-spacing: .07em;
+}
+.rmb-field-hint { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 3px; }
+.rmb-input {
+  padding: 11px 14px; background: var(--bg-surface);
+  border: 1.5px solid var(--border-em); border-radius: var(--r);
+  color: var(--text); font-family: var(--font); font-size: 14px;
+  transition: border-color .15s, box-shadow .15s; width: 100%;
+}
+.rmb-input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px var(--red-dim); }
+.rmb-input.prefilled { border-color: var(--green); background: rgba(196,123,26,.05); }
+.rmb-input::placeholder { color: var(--text-muted); }
+.rmb-select {
+  padding: 11px 14px; background: var(--bg-surface);
+  border: 1.5px solid var(--border-em); border-radius: var(--r);
+  color: var(--text); font-family: var(--font); font-size: 14px;
+  width: 100%; appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8A7E' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 36px;
+}
+.rmb-select:focus { outline: none; border-color: var(--red); }
+.rmb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rmb-prefill-banner {
+  background: rgba(196,123,26,.08); border: 1px solid rgba(196,123,26,.2);
+  border-radius: var(--r); padding: 10px 14px;
+  font-size: 12px; color: var(--text-sub); display: flex; align-items: center; gap: 8px;
+}
+.rmb-prefill-banner strong { color: var(--green); }
+
+.rmb-name-row { display: flex; gap: 8px; align-items: center; }
+.rmb-name-check-btn {
+  padding: 11px 16px; background: var(--bg-hover); border: 1.5px solid var(--border-em);
+  border-radius: var(--r); font-family: var(--font); font-size: 12px; font-weight: 700;
+  color: var(--text-sub); cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: all .2s;
+}
+.rmb-name-check-btn:hover { border-color: var(--red); color: var(--red); }
+.rmb-name-status {
+  font-size: 11px; font-weight: 700; margin-top: 4px;
+  display: none; padding: 4px 10px; border-radius: 20px;
+}
+.rmb-name-status.available { display: inline-block; background: rgba(26,122,62,.1); color: #1a7a3e; }
+.rmb-name-status.taken { display: inline-block; background: var(--red-dim); color: var(--red); }
+.rmb-name-status.checking { display: inline-block; background: var(--gold-dim); color: var(--gold); }
+
+.rmb-doc-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-surface); border: 1.5px dashed var(--border-em);
+  border-radius: var(--r); padding: 14px 16px; cursor: pointer;
+  transition: all .2s;
+}
+.rmb-doc-row:hover { border-color: var(--red); background: var(--red-dim); }
+.rmb-doc-row.uploaded { border-style: solid; border-color: var(--green); background: rgba(196,123,26,.05); }
+.rmb-doc-icon {
+  font-size: 10px; font-weight: 800; letter-spacing: .04em;
+  background: var(--bg-hover); border: 1px solid var(--border-em);
+  border-radius: 6px; padding: 4px 7px; color: var(--text-muted);
+  font-family: var(--font-mono); flex-shrink: 0;
+}
+.rmb-doc-label { flex: 1; font-size: 13px; font-weight: 600; color: var(--text); }
+.rmb-doc-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.rmb-doc-status { font-size: 11px; font-weight: 700; color: var(--green); flex-shrink: 0; }
+.rmb-doc-required {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+}
+.rmb-doc-required.req { background: var(--red-dim); color: var(--red); }
+.rmb-doc-required.opt { background: var(--bg-hover); color: var(--text-muted); }
+
+.rmb-review-section {
+  border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden;
+}
+.rmb-review-section-header {
+  padding: 12px 16px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--text-sub);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rmb-review-edit {
+  font-size: 11px; font-weight: 600; color: var(--red); cursor: pointer;
+  text-transform: none; letter-spacing: 0;
+}
+.rmb-review-row {
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px; font-size: 13px;
+}
+.rmb-review-row:last-child { border-bottom: none; }
+.rmb-review-label { color: var(--text-muted); min-width: 140px; flex-shrink: 0; }
+.rmb-review-value { color: var(--text); font-weight: 500; flex: 1; }
+
+.rmb-fee-table {
+  border: 1px solid var(--border); border-radius: var(--r); overflow: hidden;
+}
+.rmb-fee-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.rmb-fee-row:last-child { border-bottom: none; background: var(--bg-surface); font-weight: 700; }
+.rmb-fee-label { color: var(--text-sub); }
+.rmb-fee-amount { color: var(--text); font-weight: 600; font-family: var(--font-mono); font-size: 12px; }
+.rmb-fee-row:last-child .rmb-fee-amount { color: var(--red); font-size: 14px; }
+
+.rmb-disclaimer {
+  font-size: 11px; color: var(--text-muted); line-height: 1.6;
+  padding: 12px 14px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--r);
+}
+
+.rmb-cta-row {
+  display: flex; gap: 10px; align-items: center;
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  background: var(--bg-surface); flex-shrink: 0;
+}
+.rmb-btn-primary {
+  padding: 13px 28px; background: var(--red); color: #fff;
+  border: none; border-radius: var(--r); font-family: var(--font);
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: 7px;
+}
+.rmb-btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+.rmb-btn-primary:disabled { opacity: .4; cursor: default; transform: none; }
+.rmb-btn-secondary {
+  padding: 13px 20px; background: transparent; color: var(--text-sub);
+  border: 1.5px solid var(--border-em); border-radius: var(--r);
+  font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .15s;
+}
+.rmb-btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
+
+.rmb-success-wrap {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 400px; text-align: center; padding: 40px 24px;
+}
+.rmb-success-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(26,122,62,.1); border: 2px solid rgba(26,122,62,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; margin-bottom: 24px;
+  animation: rmbPop .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes rmbPop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
+.rmb-success-title {
+  font-family: var(--font-d); font-size: 24px; font-weight: 700;
+  color: var(--text); margin-bottom: 10px; letter-spacing: -.02em;
+}
+.rmb-success-sub { font-size: 14px; color: var(--text-sub); line-height: 1.65; max-width: 460px; }
+.rmb-ref-badge {
+  margin: 20px 0; background: var(--bg-surface); border: 1px solid var(--border-em);
+  border-radius: 10px; padding: 14px 24px;
+  font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+  color: var(--text); letter-spacing: .1em;
+}
+.rmb-next-steps {
+  width: 100%; max-width: 500px; margin-top: 8px;
+  display: flex; flex-direction: column; gap: 10px; text-align: left;
+}
+.rmb-next-step-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 14px;
+}
+.rmb-next-step-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: var(--red-dim); border: 1.5px solid var(--red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: var(--red);
+}
+.rmb-next-step-text { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+.rmb-next-step-text strong { color: var(--text); }
+
+@media (max-width:640px) {
+  #view-register { height: 100dvh; }
+  .rmb-body { padding: 20px 14px; }
+  .rmb-row { grid-template-columns: 1fr; }
+  .rmb-header { padding: 14px 16px; }
+  .rmb-steps-bar { padding: 0 12px; }
+  .rmb-step-pill { padding: 10px 10px; font-size: 11px; }
+  .rmb-cta-row { padding: 12px 14px; flex-wrap: wrap; }
+  .rmb-btn-primary, .rmb-btn-secondary { width: 100%; justify-content: center; }
+  .rmb-review-label { min-width: 100px; }
+}
+
 </style>
 </head>
 <body>
@@ -2303,6 +2553,11 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       <div class="nav-item" onclick="setView('docmap')" data-view="docmap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         Doc Mapper
+      </div>
+      <div class="nav-item" onclick="setView('register')" data-view="register">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8h10M7 12h6"/></svg>
+        Register My Business
+        <span style="font-size:9px;padding:1px 5px;background:var(--green);color:#fff;border-radius:4px;margin-left:auto;font-weight:800;letter-spacing:.03em">CAC</span>
       </div>
       <div class="nav-item" onclick="setView('deadlines')" data-view="deadlines">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -3342,7 +3597,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 <div class="view" id="view-journey">
 
   <!-- WELCOME / INTRO SCREEN -->
-  <div id="j-screen-welcome" class="j-screen j-active">
+  <div id="j-screen-welcome" class="j-screen scrollable j-active">
     <div class="j-intake-wrap" style="max-width:600px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:40px">
         <div class="chat-header-menu" onclick="openSidebar()" style="color:var(--j-sub)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
@@ -3373,7 +3628,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   </div>
 
   <!-- INTAKE SCREEN -->
-  <div id="j-screen-intake" class="j-screen">
+  <div id="j-screen-intake" class="j-screen scrollable">
     <div class="j-intake-wrap">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px">
         <div class="chat-header-menu" onclick="openSidebar()" style="color:var(--j-sub)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
@@ -3710,10 +3965,8 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 </div>
 
 <script>
-// ──────────────────────────────────────────────
 // CONFIG — Paste your Supabase credentials here
 // Get these from: Supabase Dashboard → Settings → API
-// ──────────────────────────────────────────────
 const SUPABASE_URL  = 'https://fifevmdyawpiqvezuqjs.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZmV2bWR5YXdwaXF2ZXp1cWpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNzc2NzQsImV4cCI6MjA5MTc1MzY3NH0.PsfDWwGet_0Zrv4VnMVUg6LXf86L4m7MZVTIDwdYX0g';
 
@@ -3728,7 +3981,6 @@ const ANTHROPIC_API_KEY = 'YOUR_ANTHROPIC_KEY_HERE';
 // In Supabase Dashboard → Authentication → URL Configuration → Redirect URLs
 // Add your app URL, e.g: https://renikgtp.pages.dev
 // Without this, Google sign-in redirects will be blocked by Supabase.
-// ─────────────────────────────────────────────────────────────
 
 const SUPABASE_CONFIGURED = SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 
@@ -3758,9 +4010,7 @@ function enterGuestMode() {
   showToast('Guest mode — AI chat works, saving requires Supabase setup', 'var(--gold)');
 }
 
-// ──────────────────────────────────────────────
 // STATE
-// ──────────────────────────────────────────────
 let currentUser = null;
 let currentOrg  = null; // { id, name, plan, role, inviteCode, ownerId, memberCount }
 let chatHistory = [];
@@ -3773,12 +4023,7 @@ let activeAgency = 'all';
 let searchQuery = '';
 let pdfAnalysisResult = null;
 
-// ──────────────────────────────────────────────
-// AUTH
-// ──────────────────────────────────────────────
-// ──────────────────────────────────────────────
 // AUTH — helpers
-// ──────────────────────────────────────────────
 let authTab = 'login';
 
 function switchAuthTab(tab) {
@@ -3998,12 +4243,10 @@ async function loadProfileFromSupabase(user) {
         industry: data.industry  || '',
         turnover: data.turnover  || '',
       };
-      // Keep localStorage in sync
       localStorage.setItem(profileKey, JSON.stringify(profile));
     }
-  } catch(e) { /* Supabase unavailable — fall through to localStorage */ }
+  } catch(e) { }
 
-  // Fall back to localStorage if Supabase had nothing
   if (!profile) {
     profile = JSON.parse(localStorage.getItem(profileKey) || 'null');
   }
@@ -4016,14 +4259,10 @@ async function loadProfileFromSupabase(user) {
     localStorage.setItem(key, String(count));
     if (count <= 3) showWelcome();
   } else {
-    // No profile anywhere — first time user, show onboarding
     openOnboarding(false);
   }
 }
 
-// ──────────────────────────────────────────────
-// WELCOME MODAL
-// ──────────────────────────────────────────────
 let _wmSlide = 1;
 
 function showWelcome() {
@@ -4053,9 +4292,6 @@ function wmSetSlide(n) {
   document.getElementById('wm-next-btn').textContent = n === 3 ? 'Get Started →' : 'Next →';
 }
 
-// ──────────────────────────────────────────────
-// NAVIGATION
-// ──────────────────────────────────────────────
 function setView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -4076,9 +4312,9 @@ function setView(name) {
   if (name==='templates') loadTemplates();
   if (name==='docmap') dcmInit();
   if (name==='journey') {
-    // jState and jInitIntake are defined in the journey script block below
     if (typeof jState !== 'undefined' && !jState.journey) jInitIntake();
   }
+  if (name==='register') rmbInit();
   closeSidebar();
 }
 
@@ -4092,9 +4328,6 @@ function closeSidebar() {
   document.getElementById('sidebar-backdrop').classList.remove('open');
 }
 
-// ──────────────────────────────────────────────
-// CHAT
-// ──────────────────────────────────────────────
 let currentSessionId = null;
 let allSessions = [];
 const SYSTEM = `You are RenikGPT — Nigeria's premier AI compliance assistant. You help SMEs, startups, and entrepreneurs understand Nigerian business regulations in plain language.
@@ -4155,11 +4388,9 @@ function addFailedMessage(originalText) {
 }
 
 async function retryLastMessage(originalText, btn) {
-  // Remove the failed message bubble
   const failedMsg = btn.closest('.msg');
   if (failedMsg) failedMsg.remove();
 
-  // Re-inject the user message into history and re-send
   document.getElementById('send-btn').disabled = true;
   const typing = document.getElementById('typing-indicator');
   typing.style.display = 'flex';
@@ -4222,9 +4453,7 @@ function fmtText(raw) {
   return html;
 }
 
-// ── AI: tries /api/chat (Cloudflare Pages), then falls back to Supabase Edge Function ──
 async function callAI(payload) {
-  // Option A: Cloudflare Pages Function at /api/chat
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
@@ -4232,9 +4461,8 @@ async function callAI(payload) {
       body: JSON.stringify(payload)
     });
     if (res.ok) return await res.json();
-  } catch(e) { /* not on Cloudflare Pages — fall through */ }
+  } catch(e) { }
 
-  // Option B: Supabase Edge Function (always available as long as project is live)
   if (SUPABASE_CONFIGURED) {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-proxy`, {
       method: 'POST',
@@ -4255,7 +4483,6 @@ async function callAI(payload) {
 async function getOrCreateSession(firstMessage) {
   if (currentSessionId) return currentSessionId;
   if (!currentUser || currentUser.id === 'guest') return null;
-  // Derive a title from the first message (first 40 chars)
   const title = firstMessage.length > 40 ? firstMessage.slice(0, 40) + '…' : firstMessage;
   const { data, error } = await sb
     .from('chat_sessions')
@@ -4281,7 +4508,6 @@ async function loadChatHistory() {
     if (error || !sessions?.length) return;
     allSessions = sessions;
     renderSessionsList();
-    // Load most recent session's messages
     await loadSession(sessions[0].id, false);
   } catch(e) { console.error('loadChatHistory error', e); }
 }
@@ -4290,7 +4516,6 @@ async function loadSession(sessionId, clearFirst = true) {
   if (!sessionId) return;
   currentSessionId = sessionId;
   _unreadSessions.delete(sessionId); // clear unread badge
-  // Mark active in sidebar
   document.querySelectorAll('.session-item').forEach(el => {
     el.classList.toggle('active', el.dataset.sid === sessionId);
   });
@@ -4302,7 +4527,6 @@ async function loadSession(sessionId, clearFirst = true) {
       .order('created_at', { ascending: true });
     if (error || !messages?.length) return;
     document.getElementById('messages').innerHTML = '';
-    // Reset chatHistory
     chatHistory = [];
     messages.forEach(m => {
       chatHistory.push({ role: m.role, content: m.content });
@@ -4330,7 +4554,6 @@ function renderSessionsList() {
   const list = document.getElementById('sessions-list');
   let sessions = allSessions;
 
-  // Apply filter
   if (_sessionFilter) {
     sessions = sessions.filter(s => (s.title || '').toLowerCase().includes(_sessionFilter));
   }
@@ -4382,11 +4605,9 @@ function startRenameSession(e, sessionId) {
 
   const commit = async () => {
     const newTitle = input.value.trim() || current;
-    // Update local state
     const sess = allSessions.find(s => s.id === sessionId);
     if (sess) sess.title = newTitle;
     renderSessionsList();
-    // Persist to Supabase
     await sb.from('chat_sessions').update({ title: newTitle }).eq('id', sessionId);
   };
   input.addEventListener('blur', commit);
@@ -4422,9 +4643,6 @@ function newChat() {
   document.getElementById('chat-input').focus();
 }
 
-// ──────────────────────────────────────────────
-// MOBILE SESSIONS BOTTOM SHEET
-// ──────────────────────────────────────────────
 function openMobileSessions() {
   document.getElementById('chat-sessions-panel').classList.add('mobile-open');
   document.getElementById('sessions-backdrop').classList.add('open');
@@ -4434,9 +4652,6 @@ function closeMobileSessions() {
   document.getElementById('sessions-backdrop').classList.remove('open');
 }
 
-// ──────────────────────────────────────────────
-// CHAT SEARCH
-// ──────────────────────────────────────────────
 let _searchActive = false;
 
 function toggleChatSearch() {
@@ -4479,15 +4694,11 @@ function clearChatSearch() {
   document.getElementById('search-match-count').textContent = '';
 }
 
-// ──────────────────────────────────────────────
-// CHAT EXPORT
-// ──────────────────────────────────────────────
 function showExportMenu() {
   const menu = document.getElementById('export-menu');
   const isOpen = menu.style.display === 'block';
   menu.style.display = isOpen ? 'none' : 'block';
   if (!isOpen) {
-    // Close when clicking outside
     setTimeout(() => {
       document.addEventListener('click', function closeMenu(e) {
         if (!menu.contains(e.target) && e.target.id !== 'export-btn') {
@@ -4548,9 +4759,7 @@ function exportChat(format) {
   showToast(`Exported as .${ext}`, '#15803D');
 }
 
-// ──────────────────────────────────────────────
 // REAL-TIME SYNC (Supabase Realtime)
-// ──────────────────────────────────────────────
 let _realtimeChannel = null;
 
 function setupRealtimeSync() {
@@ -4618,9 +4827,7 @@ function setupRealtimeSync() {
     });
 }
 
-// ──────────────────────────────────────────────
 // SEND CHAT
-// ──────────────────────────────────────────────
 async function sendChat() {
   const input = document.getElementById('chat-input');
   const q = input.value.trim();
@@ -4727,9 +4934,7 @@ function removeAttach(i) {
   renderAttachChips();
 }
 
-// ──────────────────────────────────────────────
 // REGULATIONS DB
-// ──────────────────────────────────────────────
 const SEED_REGS = [
   { id:'s1', agency:'CAC', title:'Company Registration', reference:'CAMA 2020 §18–40', summary:'All businesses must register with CAC before commencing operations. Sole traders must register within 28 days of starting trade.', category:'registration', effective_date:'2020-08-07', severity:'critical' },
   { id:'s2', agency:'FIRS', title:'Company Income Tax', reference:'CITA Cap C21 LFN 2004', summary:'Companies taxed at 30% of assessable profits. Small companies (turnover <₦25M) pay 0%; medium (₦25M–₦100M) pay 20%.', category:'tax', effective_date:'2020-01-01', severity:'critical' },
@@ -4803,9 +5008,7 @@ function askAboutReg(title, ref) {
   sendChat();
 }
 
-// ──────────────────────────────────────────────
 // PDF UPLOAD
-// ──────────────────────────────────────────────
 const dropZone = document.getElementById('drop-zone');
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
@@ -4976,9 +5179,7 @@ function closeDocViewer() {
   document.getElementById('doc-viewer-modal').classList.remove('open');
 }
 
-// ──────────────────────────────────────────────
 // CHECKLIST GENERATOR
-// ──────────────────────────────────────────────
 async function generateChecklist() {
   const bizName  = document.getElementById('cl-biz-name').value.trim();
   const bizType  = document.getElementById('cl-biz-type').value;
@@ -5107,9 +5308,7 @@ function saveReport(data, bizName, bizType, industry, stage, turnover) {
   showToast('Report saved! View it in Saved Reports.', 'var(--red)');
 }
 
-// ──────────────────────────────────────────────
 // FEATURE 1 — BUSINESS PROFILE ONBOARDING WIZARD
-// ──────────────────────────────────────────────
 let _obStep = 1;
 let _obEditMode = false;
 
@@ -5230,9 +5429,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// ──────────────────────────────────────────────
 // FEATURE 2 — SAVED REPORTS
-// ──────────────────────────────────────────────
 function loadReports() {
   updateReportsBadge();
   // Render if we're already on that view
@@ -5315,9 +5512,7 @@ function deleteReport(id) {
   showToast('Report deleted', 'var(--text-muted)');
 }
 
-// ──────────────────────────────────────────────
 // FEATURE 8 — DOCUMENT-TO-CHECKLIST MAPPING
-// ──────────────────────────────────────────────
 let _dcmReport = null;   // selected saved report object
 let _dcmFile   = null;   // File object
 let _dcmB64    = null;   // base64 string (no data-url prefix)
@@ -5572,9 +5767,7 @@ function dcmOpenWithReport(id) {
   setView('docmap');
 }
 
-// ──────────────────────────────────────────────
 // FEATURE 3 — COMPLIANCE TEMPLATES STORE
-// ──────────────────────────────────────────────
 const TEMPLATES = [
   { id:'t1', title:'Board Resolution', icon:'📜', desc:'Standard CAC-compliant board resolution template for company decisions, share allotments, and director appointments.', price:0, agency:'CAC', free:true },
   { id:'t2', title:'NDPR Privacy Policy', icon:'🔒', desc:'Full NITDA/NDPR-compliant privacy policy for websites and apps collecting Nigerian user data.', price:1500, agency:'NITDA', free:false },
@@ -5634,9 +5827,6 @@ function buyTemplate(id) {
   showToast(`To purchase ${t.title} (₦${t.price.toLocaleString()}), email hello@renikgpt.com — Paystack coming soon`, 'var(--gold)');
 }
 
-// ──────────────────────────────────────────────
-// ALERTS
-// ──────────────────────────────────────────────
 const SEED_ALERTS = [
   { id:'a1', agency:'FIRS', title:'Updated Transfer Pricing Regulations 2024', description:'FIRS has issued updated TP rules affecting companies with related-party transactions above ₦500M. New forms required from Q1 2025.', severity:'high', published_at: new Date(Date.now()-2*86400000).toISOString() },
   { id:'a2', agency:'CBN', title:'Enhanced KYC for Fintechs', description:'CBN circular requires enhanced due diligence for all crypto-adjacent transactions effective January 2025. All PSBs must update their onboarding flows.', severity:'critical', published_at: new Date(Date.now()-5*86400000).toISOString() },
@@ -5703,9 +5893,7 @@ function showToast(msg, color) {
 }
 
 
-// ──────────────────────────────────────────────
 // LAWYER MODAL
-// ──────────────────────────────────────────────
 function openLawyerModal(lawyerName) {
   document.getElementById('lm-lawyer-name').textContent = lawyerName;
   document.getElementById('lawyer-modal').classList.add('open');
@@ -5726,9 +5914,7 @@ function submitLawyerRequest() {
   document.getElementById('lm-issue').selectedIndex = 0;
 }
 
-// ──────────────────────────────────────────────
 // DEADLINE TRACKER
-// ──────────────────────────────────────────────
 const DEADLINES = [
   { agency:'FIRS',   title:'Annual Company Income Tax Return',         detail:'CIT return for companies with December year-end (CITA Cap C21)',         date:'2025-06-30', severity:'critical' },
   { agency:'FIRS',   title:'Monthly VAT Return & Remittance',          detail:'VAT returns due on 21st of each month for the previous month',           date:'2025-05-21', severity:'high' },
@@ -5800,9 +5986,7 @@ function exportDeadlinesPDF() {
   setTimeout(() => document.getElementById('view-deadlines').classList.remove('print-active'), 1000);
 }
 
-// ──────────────────────────────────────────────
 // CHECKLIST PDF EXPORT — add export button after render
-// ──────────────────────────────────────────────
 function exportChecklistPDF() {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('print-active'));
   document.getElementById('view-checklist').classList.add('print-active');
@@ -6424,9 +6608,7 @@ async function leaveOrg() {
   }
 }
 
-// ──────────────────────────────────────────────
 // INIT — session check + magic link callback
-// ──────────────────────────────────────────────
 (async () => {
   // In Supabase JS v2, magic link tokens in the URL hash are handled automatically
   // by onAuthStateChange — no need for getSessionFromUrl (it was removed in v2).
@@ -6911,7 +7093,6 @@ function jShowQuestion(idx) {
   area.innerHTML = ''; area.style.opacity = 0; area.style.transform = 'translateY(16px)';
 
   setTimeout(() => {
-    // FIX 1: Use progress bar instead of "X OF Y" since Y is dynamic (branching questions)
     const progressPercent = Math.round(((idx + 1) / Math.max(jActiveQuestions.length, 1)) * 100);
     label.textContent = `${progressPercent}% complete`;
     label.style.opacity = '0.7';
@@ -7076,7 +7257,6 @@ function jHandleSlotUpload(input, slotId) {
   });
 }
 
-// FIX 2: AI document scanning function
 async function jScanDocumentAI(file, slotId, slot) {
   try {
     // Convert file to base64
@@ -7565,7 +7745,6 @@ Generate the complete compliance journey for this business.`;
   jShowScreen('j-screen-dashboard');
 }
 
-// FIX 5: Load saved progress from Supabase
 async function jLoadProgress() {
   if (!currentUser || currentUser.id === 'guest' || !jState.journey) return;
   try {
@@ -7613,13 +7792,10 @@ async function jBuildDashboard() {
   const container = document.getElementById('j-phases-container');
   container.innerHTML = j.phases.map(p => jRenderPhase(p)).join('');
   
-  // FIX 5: Load saved progress
   await jLoadProgress();
   
-  // FIX 3: Render agency breakdown
   jRenderAgencyBreakdown();
   
-  // FIX 4: Render deadline tracker
   jRenderDeadlineTracker();
   
   jUpdateScore(0);
@@ -7639,7 +7815,6 @@ function jRenderPhase(phase) {
     </div>`;
 }
 
-// FIX 3: Agency breakdown visualization
 function jRenderAgencyBreakdown() {
   const breakdownEl = document.getElementById('j-agency-breakdown');
   if (!breakdownEl || !jState.journey) return;
@@ -7688,7 +7863,6 @@ function jRenderAgencyBreakdown() {
     </div>`;
 }
 
-// FIX 4: Deadline tracker (based on incorporation date + entity type)
 function jRenderDeadlineTracker() {
   const trackerEl = document.getElementById('j-deadline-tracker');
   if (!trackerEl || !jState.journey) return;
@@ -7868,7 +8042,6 @@ function jGetAgencyColor(agency) {
   return map[agency] || '#00D97E';
 }
 
-// FIX 5: Persist step completion to Supabase
 async function jSaveProgress() {
   if (!currentUser || currentUser.id === 'guest' || !jState.journey) return;
   try {
@@ -7912,7 +8085,7 @@ function jToggleStep(id) {
   jRefreshCard(id);
   jRecalcScore();
   jUpdateStepCount();
-  jSaveProgress(); // FIX 5: Persist to Supabase
+  jSaveProgress();
 }
 
 function jMarkStepComplete() {
@@ -7922,7 +8095,7 @@ function jMarkStepComplete() {
   jRefreshCard(id);
   jRecalcScore();
   jUpdateStepCount();
-  jSaveProgress(); // FIX 5: Persist to Supabase
+  jSaveProgress();
   const btn = document.getElementById('j-btn-mark-complete');
   btn.textContent = '✓ Marked as Complete';
   btn.className = 'j-btn-complete done';
@@ -8068,7 +8241,6 @@ async function jGenerateForm(step) {
   const i = jState.intake;
   const effectiveIndustry = i.industry === 'Other' && i.industryOther ? i.industryOther : i.industry;
   
-  // FIX 6: Include scanned document data for better pre-fills
   const scannedDataContext = Object.entries(jModuleDUploads)
     .filter(([_, upload]) => upload.scanned && upload.data)
     .map(([slotId, upload]) => {
@@ -8126,7 +8298,6 @@ function jRenderForm(formData, step) {
   document.getElementById('j-form-body').innerHTML = notice + html;
 }
 
-// FIX 6: Extract pre-fill value from scanned documents
 function jGetScannedValue(fieldKey) {
   const mappings = {
     'business_name': () => jModuleDUploads['cac_cert']?.data?.businessName,
@@ -8144,7 +8315,6 @@ function jGetScannedValue(fieldKey) {
 function jRenderField(f) {
   const full = f.type === 'textarea' ? 'full' : '';
   
-  // FIX 6: Check for scanned value
   const scannedValue = jGetScannedValue(f.key);
   const displayValue = f.value || scannedValue || '';
   const fromScanned = scannedValue && !f.value;
@@ -8216,6 +8386,380 @@ function jRestartApp() {
   jState.score = 0; jState.activeStep = null;
   jActiveQuestions = []; jCurrentQ = 0;
   jShowScreen('j-screen-welcome');
+}
+
+// ═══════════════════════════════════════════════════════
+// REGISTER MY BUSINESS — CAC Registration Wizard
+// ═══════════════════════════════════════════════════════
+
+const RMB_FEES = {
+  bn:  { base: 6500,  service: 500,  label: 'Business Name Registration' },
+  ltd: { base: 15000, service: 2500, label: 'Private Limited Company (Ltd)' },
+  llp: { base: 20000, service: 2500, label: 'Limited Liability Partnership' },
+  ngo: { base: 10000, service: 1000, label: 'Incorporated Trustees (NGO)' },
+};
+
+const RMB_DOCS = {
+  bn: [
+    { id:'id', label:'Valid Government ID', sub:'NIN slip, Voters card, International Passport, or Driver\'s Licence', req:true },
+    { id:'photo', label:'Passport Photograph', sub:'Recent white background, 2×2 inch', req:true },
+    { id:'signature', label:'Specimen Signature', sub:'Signed on plain white paper', req:true },
+    { id:'utility', label:'Utility Bill / Address Proof', sub:'Not older than 3 months', req:false },
+  ],
+  ltd: [
+    { id:'id1', label:'Director 1 — Valid ID', sub:'NIN slip, International Passport, or Driver\'s Licence', req:true },
+    { id:'id2', label:'Director 2 — Valid ID', sub:'Required for the second director', req:true },
+    { id:'photo1', label:'Director 1 — Passport Photograph', sub:'Recent, white background', req:true },
+    { id:'photo2', label:'Director 2 — Passport Photograph', sub:'Recent, white background', req:true },
+    { id:'memart', label:'Memorandum & Articles of Association', sub:'You can use CAC\'s standard MEMART or a customised version', req:true },
+    { id:'utility', label:'Utility Bill — Registered Office', sub:'Not older than 3 months', req:true },
+    { id:'signature', label:'Specimen Signatures — All Directors', sub:'Signed individually on plain paper', req:false },
+  ],
+  llp: [
+    { id:'id1', label:'Partner 1 — Valid ID', sub:'NIN slip, Passport, or Driver\'s Licence', req:true },
+    { id:'id2', label:'Partner 2 — Valid ID', sub:'Required for second partner', req:true },
+    { id:'llp_agreement', label:'LLP Agreement', sub:'Signed partnership agreement covering profit sharing, duties, etc.', req:true },
+    { id:'utility', label:'Utility Bill — Registered Office', sub:'Not older than 3 months', req:true },
+  ],
+  ngo: [
+    { id:'id', label:'Trustees\' IDs', sub:'Valid ID for each trustee (minimum 2)', req:true },
+    { id:'constitution', label:'Registered Constitution', sub:'Governing document of the NGO signed by all trustees', req:true },
+    { id:'minutes', label:'Meeting Minutes', sub:'Minutes of the meeting where the constitution was adopted', req:true },
+    { id:'photos', label:'Passport Photographs — All Trustees', sub:'Recent white background photographs', req:true },
+    { id:'newspaper', label:'Newspaper Publication', sub:'Proof of publication of intention to register in 2 national dailies', req:false },
+  ],
+};
+
+let rmbState = {
+  step: 0,
+  entityType: null,
+  names: { n1: '', n2: '', n3: '' },
+  nameStatus: { n1: null, n2: null, n3: null },
+  details: {},
+  directors: [],
+  docs: {},
+  initialised: false,
+};
+
+function rmbInit() {
+  if (rmbState.initialised) return;
+  rmbState.initialised = true;
+  rmbAutofillFromProfile();
+  rmbRenderDirectors();
+  rmbGoToStep(0);
+}
+
+function rmbAutofillFromProfile() {
+  const profile = (() => {
+    try {
+      if (currentUser && currentUser.id !== 'guest') {
+        const raw = localStorage.getItem('renik_profile_' + currentUser.id);
+        return raw ? JSON.parse(raw) : null;
+      }
+    } catch(e) {}
+    return null;
+  })();
+
+  const name = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email || '') : '';
+  const email = currentUser ? currentUser.email : '';
+  const bizName = profile?.bizName || '';
+
+  if (bizName) {
+    const banner = document.getElementById('rmb-name-prefill-banner');
+    const nameEl = document.getElementById('rmb-prefill-bizname');
+    const input = document.getElementById('rmb-name1');
+    if (banner) banner.style.display = 'flex';
+    if (nameEl) nameEl.textContent = bizName;
+    if (input) { input.value = bizName; input.classList.add('prefilled'); }
+  }
+
+  rmbState.directors = [{
+    fullName: name,
+    email: email,
+    dob: '',
+    nin: '',
+    bvn: '',
+    phone: '',
+    address: '',
+    nationality: 'Nigerian',
+  }];
+}
+
+function rmbRenderDirectors() {
+  const wrap = document.getElementById('rmb-directors-form');
+  if (!wrap) return;
+  wrap.innerHTML = rmbState.directors.map((d, i) => rmbDirectorBlock(d, i)).join('');
+
+  const addWrap = document.getElementById('rmb-add-director-wrap');
+  if (addWrap && rmbState.entityType === 'ltd') addWrap.style.display = 'block';
+}
+
+function rmbDirectorBlock(d, i) {
+  const label = rmbState.entityType === 'bn' ? 'Proprietor' :
+                rmbState.entityType === 'llp' ? `Partner ${i+1}` :
+                rmbState.entityType === 'ngo' ? `Trustee ${i+1}` :
+                `Director ${i+1}`;
+  const prefilled = d.fullName || d.email;
+  return `
+  <div style="border:1.5px solid var(--border-em);border-radius:var(--r-lg);overflow:hidden;${prefilled?'border-color:rgba(196,123,26,.35)':''}">
+    <div style="padding:12px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-sub)">${label}</div>
+      ${i > 0 ? `<button onclick="rmbRemoveDirector(${i})" style="font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;font-weight:600">Remove</button>` : ''}
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+      <div class="rmb-row">
+        <div class="rmb-field">
+          <label>Full Name <span style="color:var(--red)">*</span></label>
+          <input class="rmb-input ${d.fullName ? 'prefilled' : ''}" type="text" value="${escHtml(d.fullName||'')}" placeholder="As on government ID"
+            oninput="rmbState.directors[${i}].fullName=this.value">
+        </div>
+        <div class="rmb-field">
+          <label>Date of Birth <span style="color:var(--red)">*</span></label>
+          <input class="rmb-input" type="date" value="${d.dob||''}"
+            oninput="rmbState.directors[${i}].dob=this.value">
+        </div>
+      </div>
+      <div class="rmb-row">
+        <div class="rmb-field">
+          <label>NIN (11 digits) <span style="color:var(--red)">*</span></label>
+          <input class="rmb-input" type="text" maxlength="11" placeholder="12345678901" value="${d.nin||''}"
+            oninput="rmbState.directors[${i}].nin=this.value">
+        </div>
+        <div class="rmb-field">
+          <label>BVN (11 digits)</label>
+          <input class="rmb-input" type="text" maxlength="11" placeholder="12345678901" value="${d.bvn||''}"
+            oninput="rmbState.directors[${i}].bvn=this.value">
+        </div>
+      </div>
+      <div class="rmb-row">
+        <div class="rmb-field">
+          <label>Phone Number <span style="color:var(--red)">*</span></label>
+          <input class="rmb-input" type="tel" placeholder="080XXXXXXXX" value="${d.phone||''}"
+            oninput="rmbState.directors[${i}].phone=this.value">
+        </div>
+        <div class="rmb-field">
+          <label>Email Address <span style="color:var(--red)">*</span></label>
+          <input class="rmb-input ${d.email ? 'prefilled' : ''}" type="email" placeholder="your@email.com" value="${escHtml(d.email||'')}"
+            oninput="rmbState.directors[${i}].email=this.value">
+        </div>
+      </div>
+      <div class="rmb-field">
+        <label>Home Address <span style="color:var(--red)">*</span></label>
+        <input class="rmb-input" type="text" placeholder="Residential address" value="${escHtml(d.address||'')}"
+          oninput="rmbState.directors[${i}].address=this.value">
+      </div>
+      <div class="rmb-field">
+        <label>Nationality</label>
+        <select class="rmb-select" onchange="rmbState.directors[${i}].nationality=this.value">
+          <option ${d.nationality==='Nigerian'?'selected':''}>Nigerian</option>
+          <option ${d.nationality==='British'?'selected':''}>British</option>
+          <option ${d.nationality==='American'?'selected':''}>American</option>
+          <option value="Other" ${d.nationality==='Other'?'selected':''}>Other</option>
+        </select>
+      </div>
+    </div>
+  </div>`;
+}
+
+function rmbAddDirector() {
+  rmbState.directors.push({ fullName:'', email:'', dob:'', nin:'', bvn:'', phone:'', address:'', nationality:'Nigerian' });
+  rmbRenderDirectors();
+}
+
+function rmbRemoveDirector(i) {
+  if (rmbState.directors.length <= 1) return;
+  rmbState.directors.splice(i, 1);
+  rmbRenderDirectors();
+}
+
+function rmbSelectEntity(type, el) {
+  rmbState.entityType = type;
+  document.querySelectorAll('#rmb-s0 .rmb-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('rmb-btn-next').disabled = false;
+}
+
+function rmbCheckName(num) {
+  const input = document.getElementById('rmb-name' + num);
+  const statusEl = document.getElementById('rmb-status' + num);
+  const val = input.value.trim();
+  if (!val) return;
+  statusEl.className = 'rmb-name-status checking';
+  statusEl.textContent = 'Checking availability…';
+  setTimeout(() => {
+    const taken = ['ZENITH BANK', 'GTB NIGERIA', 'DANGOTE GROUP', 'ACCESS BANK'];
+    const upperVal = val.toUpperCase().replace(/\s+LTD$/,'').replace(/\s+LIMITED$/,'').trim();
+    const isTaken = taken.some(t => t.includes(upperVal) || upperVal.includes(t));
+    if (isTaken) {
+      statusEl.className = 'rmb-name-status taken';
+      statusEl.textContent = '✕ Name appears to be taken — try a different variation';
+    } else {
+      statusEl.className = 'rmb-name-status available';
+      statusEl.textContent = '✓ Name appears available — subject to CAC final verification';
+    }
+    rmbState.names['n' + num] = val;
+    rmbState.nameStatus['n' + num] = isTaken ? 'taken' : 'available';
+  }, 800 + Math.random() * 400);
+}
+
+function rmbRenderDocs() {
+  const list = document.getElementById('rmb-docs-list');
+  if (!list || !rmbState.entityType) return;
+  const docs = RMB_DOCS[rmbState.entityType] || [];
+  list.innerHTML = docs.map(doc => `
+    <div class="rmb-doc-row ${rmbState.docs[doc.id] ? 'uploaded' : ''}" onclick="rmbToggleDoc('${doc.id}', this)">
+      <div class="rmb-doc-icon">${rmbState.docs[doc.id] ? '✓' : 'DOC'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rmb-doc-label">${doc.label}</div>
+        <div class="rmb-doc-sub">${doc.sub}</div>
+      </div>
+      <span class="rmb-doc-required ${doc.req ? 'req' : 'opt'}">${doc.req ? 'Required' : 'Optional'}</span>
+      ${rmbState.docs[doc.id] ? '<div class="rmb-doc-status">Ready ✓</div>' : ''}
+    </div>`).join('');
+}
+
+function rmbToggleDoc(id, el) {
+  rmbState.docs[id] = !rmbState.docs[id];
+  rmbRenderDocs();
+}
+
+function rmbRenderReview() {
+  const body = document.getElementById('rmb-review-body');
+  const feeTable = document.getElementById('rmb-fee-table');
+  if (!body) return;
+
+  const et = rmbState.entityType;
+  const fee = RMB_FEES[et] || {};
+  const names = [document.getElementById('rmb-name1')?.value, document.getElementById('rmb-name2')?.value, document.getElementById('rmb-name3')?.value].filter(Boolean);
+
+  const stateVal = document.getElementById('rmb-state')?.value || '—';
+  const lgaVal = document.getElementById('rmb-lga')?.value || '—';
+  const addressVal = document.getElementById('rmb-address')?.value || '—';
+  const natureVal = document.getElementById('rmb-nature')?.value || '—';
+  const capitalVal = document.getElementById('rmb-capital')?.value || '₦100,000';
+
+  const entityLabels = { bn:'Business Name', ltd:'Private Limited Company', llp:'LLP', ngo:'NGO / Incorporated Trustees' };
+  const d0 = rmbState.directors[0] || {};
+
+  body.innerHTML = `
+  <div class="rmb-review-section">
+    <div class="rmb-review-section-header">Entity & Names <span class="rmb-review-edit" onclick="rmbGoToStep(0)">Edit</span></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Entity Type</div><div class="rmb-review-value">${entityLabels[et]||et}</div></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Name 1 (Primary)</div><div class="rmb-review-value">${names[0]||'—'}</div></div>
+    ${names[1] ? `<div class="rmb-review-row"><div class="rmb-review-label">Name 2</div><div class="rmb-review-value">${names[1]}</div></div>` : ''}
+    ${names[2] ? `<div class="rmb-review-row"><div class="rmb-review-label">Name 3</div><div class="rmb-review-value">${names[2]}</div></div>` : ''}
+  </div>
+  <div class="rmb-review-section">
+    <div class="rmb-review-section-header">Business Details <span class="rmb-review-edit" onclick="rmbGoToStep(2)">Edit</span></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Nature of Business</div><div class="rmb-review-value">${natureVal.slice(0,120)}${natureVal.length>120?'…':''}</div></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">State / LGA</div><div class="rmb-review-value">${stateVal} / ${lgaVal}</div></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Address</div><div class="rmb-review-value">${addressVal}</div></div>
+    ${et==='ltd' ? `<div class="rmb-review-row"><div class="rmb-review-label">Share Capital</div><div class="rmb-review-value">${capitalVal}</div></div>` : ''}
+  </div>
+  <div class="rmb-review-section">
+    <div class="rmb-review-section-header">${et==='bn'?'Proprietor':et==='ngo'?'Lead Trustee':'Director 1'} <span class="rmb-review-edit" onclick="rmbGoToStep(3)">Edit</span></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Full Name</div><div class="rmb-review-value">${d0.fullName||'—'}</div></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Email</div><div class="rmb-review-value">${d0.email||'—'}</div></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Phone</div><div class="rmb-review-value">${d0.phone||'—'}</div></div>
+    <div class="rmb-review-row"><div class="rmb-review-label">Nationality</div><div class="rmb-review-value">${d0.nationality||'Nigerian'}</div></div>
+    ${rmbState.directors.length > 1 ? `<div class="rmb-review-row"><div class="rmb-review-label">Total ${et==='ngo'?'Trustees':'Directors'}</div><div class="rmb-review-value">${rmbState.directors.length}</div></div>` : ''}
+  </div>`;
+
+  const capitalNum = parseInt((capitalVal||'').replace(/[^0-9]/g,'')) || 100000;
+  const capitalFee = et === 'ltd' ? Math.ceil(capitalNum * 0.01 / 100) * 100 : 0;
+  const stampDuty  = et === 'ltd' ? Math.max(500, Math.ceil(capitalNum * 0.0075 / 100) * 100) : 0;
+  const total = fee.base + fee.service + capitalFee + stampDuty;
+
+  feeTable.innerHTML = `
+    <div class="rmb-fee-row"><div class="rmb-fee-label">Registration Fee (${entityLabels[et]})</div><div class="rmb-fee-amount">₦${fee.base?.toLocaleString()}</div></div>
+    <div class="rmb-fee-row"><div class="rmb-fee-label">Service Charge</div><div class="rmb-fee-amount">₦${fee.service?.toLocaleString()}</div></div>
+    ${capitalFee ? `<div class="rmb-fee-row"><div class="rmb-fee-label">Share Capital Filing Fee</div><div class="rmb-fee-amount">₦${capitalFee.toLocaleString()}</div></div>` : ''}
+    ${stampDuty  ? `<div class="rmb-fee-row"><div class="rmb-fee-label">Stamp Duty</div><div class="rmb-fee-amount">₦${stampDuty.toLocaleString()}</div></div>` : ''}
+    <div class="rmb-fee-row"><div class="rmb-fee-label">Total Payable</div><div class="rmb-fee-amount">₦${total.toLocaleString()}</div></div>`;
+}
+
+function rmbGoToStep(n) {
+  rmbState.step = n;
+  for (let i = 0; i <= 5; i++) {
+    const screen = document.getElementById('rmb-s' + i);
+    if (screen) screen.classList.toggle('active', i === n);
+    const pill = document.getElementById('rmb-pill-' + i);
+    if (pill) {
+      pill.classList.toggle('active', i === n);
+      pill.classList.toggle('done', i < n);
+    }
+  }
+  document.getElementById('rmb-success').classList.remove('active');
+
+  const backBtn = document.getElementById('rmb-btn-back');
+  const nextBtn = document.getElementById('rmb-btn-next');
+  const nextLabel = document.getElementById('rmb-btn-next-label');
+  const ctaRow = document.getElementById('rmb-cta');
+
+  if (backBtn) backBtn.style.display = n > 0 ? 'block' : 'none';
+  if (nextLabel) nextLabel.textContent = n === 5 ? 'Submit Application →' : 'Continue →';
+  if (nextBtn) nextBtn.disabled = (n === 0 && !rmbState.entityType);
+  if (ctaRow) ctaRow.style.display = 'flex';
+
+  if (n === 3) rmbRenderDirectors();
+  if (n === 4) rmbRenderDocs();
+  if (n === 5) rmbRenderReview();
+
+  document.getElementById('rmb-body')?.scrollTo(0, 0);
+}
+
+function rmbGoNext() {
+  const n = rmbState.step;
+  if (n === 0 && !rmbState.entityType) {
+    showToast('Please select an entity type to continue', 'var(--red)'); return;
+  }
+  if (n === 1) {
+    const v = document.getElementById('rmb-name1')?.value.trim();
+    if (!v) { showToast('Please enter at least one business name', 'var(--red)'); return; }
+    rmbState.names.n1 = v;
+    rmbState.names.n2 = document.getElementById('rmb-name2')?.value.trim()||'';
+    rmbState.names.n3 = document.getElementById('rmb-name3')?.value.trim()||'';
+  }
+  if (n === 2) {
+    const nature = document.getElementById('rmb-nature')?.value.trim();
+    const state  = document.getElementById('rmb-state')?.value;
+    const address= document.getElementById('rmb-address')?.value.trim();
+    if (!nature || !state || !address) { showToast('Please fill in Nature of Business, State and Address', 'var(--red)'); return; }
+  }
+  if (n === 5) { rmbSubmit(); return; }
+  rmbGoToStep(n + 1);
+}
+
+function rmbGoBack() {
+  if (rmbState.step > 0) rmbGoToStep(rmbState.step - 1);
+}
+
+function rmbSubmit() {
+  const nextBtn = document.getElementById('rmb-btn-next');
+  if (nextBtn) { nextBtn.disabled = true; nextBtn.innerHTML = '<span>Submitting…</span>'; }
+  setTimeout(() => {
+    const ref = 'CAC-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('rmb-ref-num').textContent = ref;
+    for (let i = 0; i <= 5; i++) {
+      const s = document.getElementById('rmb-s' + i);
+      if (s) s.classList.remove('active');
+      const pill = document.getElementById('rmb-pill-' + i);
+      if (pill) { pill.classList.remove('active'); pill.classList.add('done'); }
+    }
+    document.getElementById('rmb-success').classList.add('active');
+    document.getElementById('rmb-cta').style.display = 'none';
+    showToast('Application submitted! Reference: ' + ref, 'var(--green)');
+  }, 1400);
+}
+
+function rmbRestart() {
+  rmbState = {
+    step: 0, entityType: null,
+    names: { n1:'', n2:'', n3:'' },
+    nameStatus: { n1:null, n2:null, n3:null },
+    details: {}, directors: [], docs: {}, initialised: false,
+  };
+  rmbInit();
 }
 </script>
 
